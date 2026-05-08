@@ -1,0 +1,50 @@
+name: Atualizar Docs e Release Notes
+
+on:
+  # Ativado manualmente (para testar)
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versão do Jira (ex: v2.5.0)'
+        required: true
+        type: string
+
+  # Ou via webhook externo do Jira (configure o Jira para chamar este endpoint)
+  repository_dispatch:
+    types: [jira-release-finalized]
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependências
+        run: npm install node-fetch
+
+      - name: Executar agente de atualização
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+          VERSION: ${{ github.event.inputs.version || github.event.client_payload.version }}
+        run: node scripts/update-docs-agent.js
+
+      - name: Commitar documentação atualizada
+        run: |
+          git config --local user.email "agente@amigo-one.internal"
+          git config --local user.name "Agente Amigo One"
+          git add -A
+          git diff --staged --quiet || git commit -m "docs: atualização automática — ${{ env.VERSION }} [skip ci]"
+          git push

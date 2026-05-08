@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amigo One — Portal Interno</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">A1</span>
+      <span class="logo-text">Amigo One</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#home"    class="nav-item active" data-section="home">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg>
+        Início
+      </a>
+      <a href="#docs"    class="nav-item" data-section="docs">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Documentação
+      </a>
+      <a href="#roadmap" class="nav-item" data-section="roadmap">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Roadmap
+      </a>
+      <a href="#releases" class="nav-item" data-section="releases">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg>
+        Releases
+      </a>
+      <a href="#dashboard" class="nav-item" data-section="dashboard">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="jira-status" id="jiraStatus">
+        <span class="dot"></span> Jira conectado
+      </span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HOME -->
+    <section class="section active" id="home">
+      <div class="hero">
+        <div class="hero-badge">Portal Interno</div>
+        <h1 class="hero-title">Amigo <em>One</em></h1>
+        <p class="hero-sub">Documentação, roadmap e métricas do produto — tudo em um lugar só, sincronizado com o Jira automaticamente.</p>
+        <div class="hero-cards">
+          <div class="hcard" onclick="goTo('docs')">
+            <div class="hcard-icon docs-icon">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+            </div>
+            <h3>Documentação</h3>
+            <p>Atualizada automaticamente a cada release via agente IA + Jira.</p>
+            <span class="hcard-arrow">→</span>
+          </div>
+          <div class="hcard" onclick="goTo('roadmap')">
+            <div class="hcard-icon roadmap-icon">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <h3>Roadmap</h3>
+            <p>Versões, datas e entregas previstas direto do Jira em tempo real.</p>
+            <span class="hcard-arrow">→</span>
+          </div>
+          <div class="hcard" onclick="goTo('dashboard')">
+            <div class="hcard-icon dash-icon">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <h3>Dashboard</h3>
+            <p>Métricas de saúde do produto, velocidade e histórico de entregas.</p>
+            <span class="hcard-arrow">→</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCUMENTAÇÃO -->
+    <section class="section" id="docs">
+      <div class="section-header">
+        <div>
+          <h2>Documentação</h2>
+          <p class="section-sub">Atualizada automaticamente quando uma release é finalizada no Jira.</p>
+        </div>
+        <div class="sync-badge">
+          <span class="dot green"></span> Sincronizado há 2h
+        </div>
+      </div>
+
+      <div class="docs-layout">
+        <aside class="docs-sidebar">
+          <div class="docs-nav-group">
+            <span class="docs-nav-label">Visão Geral</span>
+            <a href="#" class="docs-nav-item active">Introdução</a>
+            <a href="#" class="docs-nav-item">Arquitetura</a>
+            <a href="#" class="docs-nav-item">Glossário</a>
+          </div>
+          <div class="docs-nav-group">
+            <span class="docs-nav-label">Funcionalidades</span>
+            <a href="#" class="docs-nav-item">Módulo de Pagamentos</a>
+            <a href="#" class="docs-nav-item">Gestão de Usuários</a>
+            <a href="#" class="docs-nav-item">Relatórios</a>
+            <a href="#" class="docs-nav-item">Integrações</a>
+          </div>
+          <div class="docs-nav-group">
+            <span class="docs-nav-label">Técnico</span>
+            <a href="#" class="docs-nav-item">API Reference</a>
+            <a href="#" class="docs-nav-item">Configuração</a>
+            <a href="#" class="docs-nav-item">Deploy</a>
+          </div>
+        </aside>
+
+        <div class="docs-content">
+          <div class="docs-breadcrumb">Visão Geral → Introdução</div>
+          <h3 class="docs-title">Introdução ao Amigo One</h3>
+          <div class="docs-meta">
+            <span>Atualizado em <strong>28/05/2025</strong></span>
+            <span>Release <strong>v2.4.0</strong></span>
+          </div>
+          <div class="docs-body">
+            <p>O <strong>Amigo One</strong> é a plataforma central de gestão financeira e relacionamento com clientes da Amigo. Este documento descreve sua arquitetura, funcionalidades principais e diretrizes de uso.</p>
+            <h4>O que é o Amigo One?</h4>
+            <p>Uma plataforma integrada que unifica o ciclo de vida completo do cliente — desde a aquisição até a fidelização — com módulos de pagamentos, relatórios e gestão de usuários.</p>
+            <h4>Principais funcionalidades</h4>
+            <ul>
+              <li>Processamento de pagamentos em tempo real</li>
+              <li>Dashboard analítico com KPIs customizáveis</li>
+              <li>Gestão completa de perfis de usuários</li>
+              <li>Integração com sistemas externos via API REST</li>
+              <li>Relatórios automáticos por período</li>
+            </ul>
+            <h4>Arquitetura geral</h4>
+            <p>A plataforma é construída em arquitetura de microserviços, com frontend em React, backend em Node.js e banco de dados PostgreSQL. A comunicação entre serviços é feita via mensageria assíncrona.</p>
+            <div class="docs-callout">
+              <strong>📌 Nota</strong> — Esta documentação é gerada automaticamente a partir das issues do Jira ao final de cada release. Para sugerir alterações, abra uma issue com a tag <code>docs</code>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT IA -->
+      <div class="chat-section">
+        <div class="chat-header">
+          <div class="chat-header-left">
+            <div class="chat-avatar">A1</div>
+            <div>
+              <strong>Assistente do Amigo One</strong>
+              <span class="chat-powered">powered by Claude</span>
+            </div>
+          </div>
+          <button class="chat-toggle" id="chatToggle" onclick="toggleChat()">Abrir chat ↗</button>
+        </div>
+        <div class="chat-box" id="chatBox">
+          <div class="chat-messages" id="chatMessages">
+            <div class="msg bot">
+              <div class="msg-bubble">Olá! Sou o assistente do Amigo One. Posso responder dúvidas sobre funcionalidades, arquitetura, integrações e processos do produto. Como posso ajudar?</div>
+            </div>
+          </div>
+          <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="Pergunte sobre o produto..." onkeydown="if(event.key==='Enter') sendChat()" />
+            <button onclick="sendChat()">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section class="section" id="roadmap">
+      <div class="section-header">
+        <div>
+          <h2>Roadmap</h2>
+          <p class="section-sub">Versões e entregas planejadas, sincronizadas com o Jira.</p>
+        </div>
+        <div class="sync-badge">
+          <span class="dot green"></span> Jira · ao vivo
+        </div>
+      </div>
+
+      <div class="roadmap-timeline">
+
+        <div class="timeline-version current">
+          <div class="version-marker current-marker"></div>
+          <div class="version-card">
+            <div class="version-header">
+              <div>
+                <span class="version-tag current-tag">Em andamento</span>
+                <h3>v2.5.0</h3>
+              </div>
+              <div class="version-date">
+                <span class="date-label">Previsão</span>
+                <span class="date-val">15 Jun 2025</span>
+              </div>
+            </div>
+            <p class="version-desc">Novo módulo de relatórios avançados com exportação em PDF, melhorias na performance do módulo de pagamentos e refatoração do sistema de autenticação.</p>
+            <div class="version-items">
+              <div class="vitem done"><span class="vitem-dot done-dot"></span> Redesign da tela de pagamentos</div>
+              <div class="vitem done"><span class="vitem-dot done-dot"></span> API de relatórios v2</div>
+              <div class="vitem wip"><span class="vitem-dot wip-dot"></span> Exportação PDF (em progresso)</div>
+              <div class="vitem todo"><span class="vitem-dot todo-dot"></span> Refatoração de autenticação</div>
+              <div class="vitem todo"><span class="vitem-dot todo-dot"></span> Testes de carga</div>
+            </div>
+            <div class="version-progress">
+              <div class="progress-bar"><div class="progress-fill" style="width: 55%"></div></div>
+              <span>55% concluído</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-version planned">
+          <div class="version-marker planned-marker"></div>
+          <div class="version-card planned-card">
+            <div class="version-header">
+              <div>
+                <span class="version-tag planned-tag">Planejado</span>
+                <h3>v2.6.0</h3>
+              </div>
+              <div class="version-date">
+                <span class="date-label">Previsão</span>
+                <span class="date-val">30 Jul 2025</span>
+              </div>
+            </div>
+            <p class="version-desc">Integração com plataformas externas de CRM, dashboard de analytics em tempo real e novo sistema de notificações.</p>
+            <div class="version-items">
+              <div class="vitem todo"><span class="vitem-dot todo-dot"></span> Integração CRM</div>
+              <div class="vitem todo"><span class="vitem-dot todo-dot"></span> Analytics em tempo real</div>
+              <div class="vitem todo"><span class="vitem-dot todo-dot"></span> Sistema de notificações</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-version planned">
+          <div class="version-marker planned-marker"></div>
+          <div class="version-card planned-card">
+            <div class="version-header">
+              <div>
+                <span class="version-tag future-tag">Futuro</span>
+                <h3>v3.0.0</h3>
+              </div>
+              <div class="version-date">
+                <span class="date-label">Previsão</span>
+                <span class="date-val">Q4 2025</span>
+              </div>
+            </div>
+            <p class="version-desc">Refatoração completa da arquitetura, migração para microsserviços independentes e novo design system.</p>
+            <div class="version-items">
+              <div class="vitem todo"><span class="vitem-dot todo-dot"></span> Nova arquitetura de microsserviços</div>
+              <div class="vitem todo"><span class="vitem-dot todo-dot"></span> Novo design system</div>
+              <div class="vitem todo"><span class="vitem-dot todo-dot"></span> App mobile (iOS e Android)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-version done-version">
+          <div class="version-marker done-marker"></div>
+          <div class="version-card done-card">
+            <div class="version-header">
+              <div>
+                <span class="version-tag done-tag">Entregue</span>
+                <h3>v2.4.0</h3>
+              </div>
+              <div class="version-date">
+                <span class="date-label">Entregue em</span>
+                <span class="date-val">02 Mai 2025</span>
+              </div>
+            </div>
+            <p class="version-desc">Módulo de gestão de usuários com perfis avançados, controle de permissões por papel e auditoria de ações.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RELEASES -->
+    <section class="section" id="releases">
+      <div class="section-header">
+        <div>
+          <h2>Release Notes</h2>
+          <p class="section-sub">Changelogs gerados automaticamente pelo agente a cada versão finalizada no Jira.</p>
+        </div>
+      </div>
+
+      <div class="releases-list">
+        <div class="release-item">
+          <div class="release-version-badge">v2.4.0</div>
+          <div class="release-content">
+            <div class="release-meta">
+              <strong>Amigo One 2.4.0</strong>
+              <span class="release-date">02 de maio de 2025</span>
+              <span class="release-auto">✦ Gerado por agente</span>
+            </div>
+            <div class="release-sections">
+              <div class="release-section">
+                <span class="rs-label new">Novidades</span>
+                <ul>
+                  <li>Módulo de gestão de usuários com perfis avançados</li>
+                  <li>Controle de permissões granular por papel (RBAC)</li>
+                  <li>Log de auditoria de todas as ações de usuário</li>
+                  <li>Exportação de relatório de usuários em CSV</li>
+                </ul>
+              </div>
+              <div class="release-section">
+                <span class="rs-label fix">Correções</span>
+                <ul>
+                  <li>Corrigido timeout em consultas de relatório com grande volume de dados</li>
+                  <li>Ajuste na paginação da listagem de transações</li>
+                </ul>
+              </div>
+              <div class="release-section">
+                <span class="rs-label improve">Melhorias</span>
+                <ul>
+                  <li>Performance do carregamento inicial reduzida em 40%</li>
+                  <li>Refatoração do módulo de autenticação para JWT</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="release-item">
+          <div class="release-version-badge older">v2.3.1</div>
+          <div class="release-content">
+            <div class="release-meta">
+              <strong>Amigo One 2.3.1</strong>
+              <span class="release-date">14 de abril de 2025</span>
+              <span class="release-auto">✦ Gerado por agente</span>
+            </div>
+            <div class="release-sections">
+              <div class="release-section">
+                <span class="rs-label fix">Correções</span>
+                <ul>
+                  <li>Hotfix no módulo de pagamentos para transações acima de R$10.000</li>
+                  <li>Corrigida inconsistência no cálculo de taxas parceladas</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="section" id="dashboard">
+      <div class="section-header">
+        <div>
+          <h2>Dashboard</h2>
+          <p class="section-sub">Saúde do produto, velocidade do time e histórico de entregas.</p>
+        </div>
+        <div class="sync-badge">
+          <span class="dot green"></span> Atualizado hoje
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-label">Issues entregues (sprint)</span>
+          <span class="kpi-value">34</span>
+          <span class="kpi-delta positive">▲ 12% vs sprint anterior</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Bugs abertos</span>
+          <span class="kpi-value">7</span>
+          <span class="kpi-delta negative">▲ 2 novos esta semana</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Velocidade média</span>
+          <span class="kpi-value">82 <small>pts</small></span>
+          <span class="kpi-delta positive">▲ +8 pts vs média</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Releases no ano</span>
+          <span class="kpi-value">9</span>
+          <span class="kpi-delta neutral">Meta: 12 até dez/25</span>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-card">
+          <h4>Entregas por sprint</h4>
+          <div class="bar-chart">
+            <div class="bar-group"><div class="bar" style="height:60%"></div><span>S1</span></div>
+            <div class="bar-group"><div class="bar" style="height:75%"></div><span>S2</span></div>
+            <div class="bar-group"><div class="bar" style="height:50%"></div><span>S3</span></div>
+            <div class="bar-group"><div class="bar" style="height:88%"></div><span>S4</span></div>
+            <div class="bar-group"><div class="bar" style="height:70%"></div><span>S5</span></div>
+            <div class="bar-group"><div class="bar current-bar" style="height:90%"></div><span>S6</span></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h4>Distribuição de issues</h4>
+          <div class="donut-wrap">
+            <svg viewBox="0 0 120 120" width="120" height="120">
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--accent)" stroke-width="18" stroke-dasharray="158 283" stroke-dashoffset="70" />
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--accent2)" stroke-width="18" stroke-dasharray="70 283" stroke-dashoffset="-88" />
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--muted-border)" stroke-width="18" stroke-dasharray="55 283" stroke-dashoffset="-158" />
+            </svg>
+            <div class="donut-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span> Features <strong>56%</strong></div>
+              <div class="legend-item"><span class="legend-dot" style="background:var(--accent2)"></span> Bugs <strong>25%</strong></div>
+              <div class="legend-item"><span class="legend-dot" style="background:var(--muted-border)"></span> Melhorias <strong>19%</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card health-card">
+          <h4>Saúde do produto</h4>
+          <div class="health-items">
+            <div class="health-item">
+              <span>Cobertura de testes</span>
+              <div class="health-bar-wrap"><div class="health-bar" style="width:78%; background: var(--accent)"></div></div>
+              <span class="health-pct">78%</span>
+            </div>
+            <div class="health-item">
+              <span>Issues críticos</span>
+              <div class="health-bar-wrap"><div class="health-bar" style="width:15%; background: #e05c5c"></div></div>
+              <span class="health-pct">15%</span>
+            </div>
+            <div class="health-item">
+              <span>Dívida técnica</span>
+              <div class="health-bar-wrap"><div class="health-bar" style="width:32%; background: #e09a3c"></div></div>
+              <span class="health-pct">32%</span>
+            </div>
+            <div class="health-item">
+              <span>On-time delivery</span>
+              <div class="health-bar-wrap"><div class="health-bar" style="width:88%; background: var(--accent)"></div></div>
+              <span class="health-pct">88%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
