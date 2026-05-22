@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amigo One – Documentação</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand: #008CFF; --brand-dark: #0070CC;
+  --bg: #F8F9FA; --surface: #FFFFFF;
+  --sidebar-bg: #0F172A; --sidebar-2: #1E293B; --sidebar-3: #334155;
+  --border: #E9ECEF; --text: #0F172A; --text-2: #334155; --text-3: #64748B;
+  --success: #22C55E; --radius: 12px; --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--text); display: flex; }
+
+/* ── SIDEBAR ── */
+.sidebar { width: 280px; flex-shrink: 0; background: var(--sidebar-bg); display: flex; flex-direction: column; height: 100vh; z-index: 10; }
+.sidebar-header { padding: 20px 20px 16px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.35); text-decoration: none; letter-spacing: .3px; margin-bottom: 14px; transition: color .15s; }
+.back-link:hover { color: rgba(255,255,255,.7); }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 3px; }
+.logo-icon { width: 32px; height: 32px; background: var(--brand); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-name { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: -.3px; }
+.sidebar-subtitle { font-size: 11px; color: rgba(255,255,255,.35); font-weight: 500; letter-spacing: 2px; text-transform: uppercase; padding-left: 42px; }
+.sidebar-search { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.search-wrap { position: relative; }
+.search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,.3); }
+.search-input { width: 100%; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); border-radius: 8px; padding: 7px 10px 7px 32px; font-size: 12px; color: #fff; outline: none; font-family: inherit; transition: border-color .2s; }
+.search-input::placeholder { color: rgba(255,255,255,.3); }
+.search-input:focus { border-color: rgba(0,140,255,.5); }
+.sidebar-tree { flex: 1; overflow-y: auto; padding: 10px 0 20px; }
+.sidebar-tree::-webkit-scrollbar { width: 4px; }
+.sidebar-tree::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 4px; }
+.tree-group { margin-bottom: 4px; }
+.tree-item { display: flex; align-items: center; gap: 6px; padding: 6px 16px 6px 12px; font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,.55); cursor: pointer; transition: background .12s, color .12s; border-radius: 0; user-select: none; }
+.tree-item:hover { background: rgba(255,255,255,.05); color: rgba(255,255,255,.85); }
+.tree-item.active { background: rgba(0,140,255,.18); color: #60AAFF; font-weight: 600; }
+.tree-item .ti-chevron { margin-left: auto; transition: transform .2s; flex-shrink: 0; opacity: .4; }
+.tree-item.open .ti-chevron { transform: rotate(90deg); }
+.tree-item .ti-indent { flex-shrink: 0; }
+.tree-children { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+.tree-children.open { max-height: 1000px; }
+
+/* ── MAIN ── */
+.main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.topbar { height: 52px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 32px; gap: 12px; flex-shrink: 0; }
+.breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-3); }
+.breadcrumb span { color: var(--text-3); }
+.breadcrumb .bc-current { color: var(--text-2); font-weight: 600; }
+.topbar-actions { margin-left: auto; display: flex; gap: 8px; }
+.outline-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--brand); text-decoration: none; padding: 5px 12px; border: 1px solid rgba(0,140,255,.25); border-radius: 7px; transition: background .15s; }
+.outline-link:hover { background: rgba(0,140,255,.07); }
+
+.content-area { flex: 1; overflow-y: auto; padding: 40px 52px 60px; max-width: 860px; }
+.content-area::-webkit-scrollbar { width: 6px; }
+.content-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── DOC CONTENT ── */
+.doc-title { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -.5px; margin-bottom: 6px; }
+.doc-meta { font-size: 12px; color: var(--text-3); margin-bottom: 32px; display: flex; align-items: center; gap: 12px; }
+.doc-meta span { display: flex; align-items: center; gap: 4px; }
+.doc-body { font-size: 14.5px; line-height: 1.75; color: var(--text-2); }
+.doc-body h2 { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -.3px; margin: 36px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.doc-body h3 { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -.2px; margin: 28px 0 10px; }
+.doc-body h4 { font-size: 14px; font-weight: 700; color: var(--text); margin: 20px 0 8px; }
+.doc-body p { margin-bottom: 14px; }
+.doc-body ul, .doc-body ol { padding-left: 20px; margin-bottom: 14px; }
+.doc-body li { margin-bottom: 6px; }
+.doc-body li::marker { color: var(--brand); }
+.doc-body hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+.doc-body strong { font-weight: 700; color: var(--text); }
+.doc-body em { font-style: italic; }
+.doc-body blockquote { border-left: 3px solid var(--brand); padding: 10px 16px; background: #F0F7FF; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 13.5px; color: var(--text-2); }
+.doc-body a { color: var(--brand); text-decoration: none; }
+.doc-body a:hover { text-decoration: underline; }
+.doc-wip { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; gap: 12px; }
+.doc-wip-icon { font-size: 40px; }
+.doc-wip-title { font-size: 16px; font-weight: 700; color: var(--text-2); }
+.doc-wip-sub { font-size: 13px; color: var(--text-3); }
+
+/* ── SEARCH HIGHLIGHT ── */
+.hi { background: rgba(0,140,255,.15); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <a class="back-link" href="amigo-portal-home.html">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+      Portal Amigo One
+    </a>
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="20" height="16" viewBox="0 0 51 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M26.0222 11.3661C25.9017 11.2228 25.7514 11.1076 25.5816 11.0286C25.4119 10.9496 25.227 10.9086 25.0398 10.9086C24.8526 10.9086 24.6676 10.9496 24.4979 11.0286C24.3282 11.1076 24.1778 11.2228 24.0574 11.3661L10.6332 27.5009C10.4135 27.7651 10.3068 28.1052 10.3363 28.4476C10.3659 28.7899 10.5292 29.1068 10.791 29.3295C10.9196 29.4386 11.0686 29.5211 11.2294 29.5722C11.3901 29.6234 11.5594 29.6421 11.7274 29.6275C11.8954 29.6128 12.0589 29.565 12.2084 29.4867C12.3578 29.4085 12.4902 29.3015 12.598 29.1717L25.0398 14.2202L37.4815 29.1717C37.6015 29.3157 37.7518 29.4314 37.9216 29.5107C38.0914 29.59 38.2765 29.631 38.4639 29.6307C38.7148 29.6347 38.9615 29.5654 39.1736 29.4314C39.3858 29.2974 39.5543 29.1045 39.6586 28.8763C39.7628 28.648 39.7982 28.3943 39.7606 28.1462C39.7229 27.8981 39.6137 27.6664 39.4463 27.4794L26.0222 11.3661ZM29.3639 7.21408C28.839 6.58149 28.1816 6.07185 27.4382 5.72118C26.6947 5.37052 25.8833 5.18737 25.0613 5.18467C24.2385 5.18726 23.4265 5.3711 22.6829 5.72309C21.9392 6.07508 21.2822 6.58658 20.7587 7.22124L6.88275 23.8652C5.77833 25.0738 5.16684 26.6525 5.16887 28.2897C5.17285 29.6406 5.60063 30.9562 6.39193 32.0511C7.18323 33.146 8.29816 33.965 9.57959 34.3927C10.861 34.8203 12.2444 34.8351 13.5346 34.4349C14.8249 34.0348 15.9571 33.2398 16.7716 32.162L25.0254 22.2517L33.2004 32.0688C33.9989 33.1762 35.1281 34.0018 36.4254 34.427C37.7228 34.8521 39.1216 34.8549 40.4207 34.4349C41.7197 34.0149 42.8522 33.1938 43.6551 32.0896C44.458 30.9854 44.8901 29.655 44.8892 28.2897C44.8928 26.8716 44.4319 25.4913 43.5769 24.36C43.5338 24.2668 29.3639 7.21408 29.3639 7.21408ZM41.1889 31.0577C40.8309 31.4192 40.4048 31.706 39.9352 31.9018C39.4656 32.0976 38.9619 32.1985 38.4532 32.1985C37.9444 32.1985 37.4407 32.0976 36.9712 31.9018C36.5016 31.706 36.0755 31.4192 35.7174 31.0577L25.0398 18.2072C25.0398 18.2072 14.4123 30.9932 14.3478 31.0577C13.9903 31.4189 13.5649 31.7057 13.0959 31.9014C12.6269 32.0971 12.1238 32.1978 11.6156 32.1978C11.1074 32.1978 10.6043 32.0971 10.1354 31.9014C9.66639 31.7057 9.24088 31.4189 8.88345 31.0577C8.22862 30.3923 7.83108 29.5162 7.76149 28.5852C7.6919 27.6543 7.95479 26.7288 8.50341 25.9735V25.9304L22.659 8.8921C22.9479 8.5331 23.3161 8.24591 23.7347 8.05308C24.1361 7.87304 24.5712 7.78017 25.0111 7.78058C25.4618 7.77736 25.9075 7.87484 26.3156 8.0659C26.7238 8.25696 27.0842 8.53678 27.3704 8.88492L41.2248 25.6006C41.923 26.3414 42.3064 27.3243 42.2943 28.3422C42.2823 29.3601 41.8757 30.3336 41.1602 31.0577H41.1889ZM48.1233 21.886C48.0803 21.7784 33.2506 3.87238 33.2506 3.87238C32.2258 2.63192 30.9339 1.63909 29.4715 0.968107C28.075 0.33332 26.5594 0.00329513 25.0254 1.43252e-05C24.2635 -0.00124499 23.5037 0.0805281 22.7594 0.243848C22.0199 0.409348 21.299 0.649618 20.6081 0.96095C19.1464 1.63633 17.8549 2.63127 16.829 3.87238L3.29724 20.1147C1.70476 21.7619 0.629465 23.8394 0.204037 26.0907C-0.221391 28.3419 0.0216566 30.6685 0.903238 32.7833C1.78482 34.898 3.26632 36.7083 5.16488 37.9907C7.06345 39.2732 9.29599 39.9717 11.5869 40C13.1053 40.0035 14.6095 39.7076 16.0135 39.1293C17.4175 38.551 18.6936 37.7015 19.7691 36.6296C19.9196 36.5005 25.0111 30.3191 25.0111 30.3191C25.0111 30.3191 30.2173 36.5794 30.2962 36.6368C31.3645 37.7058 32.6334 38.5532 34.0302 39.1304C35.4269 39.7075 36.924 40.003 38.4353 40C39.9646 39.9915 41.4773 39.6819 42.887 39.0888C44.2967 38.4958 45.5758 37.6308 46.6512 36.5434C47.7266 35.456 48.5773 34.1674 49.1547 32.7513C49.7321 31.3351 50.025 29.8191 50.0165 28.2897C50.0519 26.0133 49.3942 23.7798 48.1305 21.886H48.1233ZM46.7393 31.8393C46.5164 32.3808 46.2376 32.8976 45.9074 33.3811C45.2663 34.3569 44.4375 35.1954 43.4693 35.848C42.9899 36.1786 42.4781 36.4597 41.9419 36.687C40.8321 37.1602 39.6381 37.4041 38.4317 37.4041C37.2252 37.4041 36.0312 37.1602 34.9214 36.687C34.3852 36.4597 33.8734 36.1786 33.394 35.848C32.9123 35.5214 32.4632 35.1492 32.053 34.7365L30.3392 32.6855L25.0183 26.2746L18.0265 34.6719L17.9692 34.7365C17.5615 35.1491 17.1147 35.5214 16.6353 35.848C16.1544 36.1803 15.6401 36.4615 15.1008 36.687C13.9922 37.16 12.7994 37.4038 11.5941 37.4038C10.3889 37.4038 9.19604 37.16 8.08748 36.687C7.54811 36.4615 7.03378 36.1803 6.55287 35.848C6.07483 35.5195 5.62832 35.1474 5.21907 34.7365C4.80838 34.3211 4.43858 33.8672 4.11475 33.3811C3.78998 32.8943 3.51146 32.3781 3.28288 31.8393C2.34852 29.5676 2.34852 27.019 3.28288 24.7472C3.51143 24.2062 3.78994 23.6876 4.11475 23.1983L4.27249 22.9688L4.37289 22.8613L18.758 5.54322C19.534 4.59696 20.5148 3.83929 21.6264 3.32738C22.6907 2.85023 23.8447 2.60575 25.0111 2.61028C26.2073 2.60995 27.3888 2.87398 28.471 3.38349C29.5533 3.893 30.5095 4.63539 31.2714 5.55756L40.5937 16.8089L44.8103 21.886L45.7784 23.0548L45.8788 23.2055C46.209 23.6915 46.4878 24.2106 46.7106 24.7544C47.179 25.8779 47.4203 27.0832 47.4203 28.3004C47.4203 29.5177 47.179 30.723 46.7106 31.8465" fill="white"/>
+        </svg>
+      </div>
+      <span class="logo-name">Amigo One</span>
+    </div>
+    <div class="sidebar-subtitle">Documentação</div>
+  </div>
+  <div class="sidebar-search">
+    <div class="search-wrap">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="search-input" type="text" placeholder="Buscar na documentação…" id="searchInput" oninput="filterDocs(this.value)">
+    </div>
+  </div>
+  <nav class="sidebar-tree" id="sidebarTree"></nav>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb" id="breadcrumb">
+      <span>Amigo One</span>
+      <span>›</span>
+      <span class="bc-current">Documentação</span>
+    </div>
+    <div class="topbar-actions">
+      <a class="outline-link" id="outlineLink" href="https://outline.amigo.zone" target="_blank">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Ver no Outline
+      </a>
+    </div>
+  </div>
+  <div class="content-area" id="contentArea"></div>
+</div>
+
+<script>
+// ── DOCUMENT DATA ──────────────────────────────────────────────
+const DOCS = {
+  'amigo-one': {
+    title: 'Amigo One',
+    url: 'https://outline.amigo.zone/doc/amigo-one-YXdhgNczJW',
+    breadcrumb: ['Amigo One'],
+    content: `### Introdução & Objetivo
+
+O **Amigo One** é um aplicativo inovador projetado para profissionais de saúde organizarem sua rotina e expandirem o acesso ao cuidado, onde quer que estejam. Ele simplifica processos complexos, proporcionando praticidade e eficiência no dia a dia.
+
+---
+
+### Público-Alvo
+
+O Amigo One foi pensado para atender diferentes etapas da jornada profissional na área médica:
+
+* **Estudantes de medicina** em universidades ou faculdades.
+* **Estudantes em fase de conclusão do curso**, prontos para entrar no mercado de trabalho.
+* **Médicos recém-formados**, iniciando sua atuação profissional.
+* **Médicos experientes**, com graduação, residência ou especialização concluídas, buscando ferramentas que otimizem sua prática.
+
+---
+
+### Por que utilizar o Amigo One?
+
+A rotina do profissional de saúde é frequentemente marcada por processos burocráticos que dificultam a gestão do tempo e a prestação de serviços. O **Amigo One** organiza e centraliza esses processos em um único aplicativo, tornando-os mais simples, acessíveis e eficientes. O objetivo é reduzir a carga administrativa e permitir que o profissional foque no que realmente importa: o cuidado com as pessoas.
+
+---
+
+### Serviços Integrados
+
+#### Amigo Contábil
+
+Um serviço integrado ao Amigo One que simplifica a gestão contábil do profissional de saúde:
+
+* **Abertura de empresa gratuita**.
+* **Emissão ilimitada de notas fiscais**.
+* **Pagamentos simplificados das obrigações fiscais**: toda a contabilidade do cliente é gerenciada pela equipe especializada do Amigo Contábil.
+
+#### Amigo Pay
+
+O **Amigo Pay** é parte essencial da plataforma **Amigo One**, oferecendo uma solução de gestão financeira adaptada às necessidades dos profissionais de saúde:
+
+* **Gerenciamento de Recebíveis**: Acompanhe todos os recebimentos de forma clara e organizada.
+* **Transferências via PIX e TED**: Realize transferências instantâneas e seguras.
+* **Emissão de Boletos**: Gera boletos de forma prática e eficiente.
+* **Geração de Extratos Completos**: Acesso a extratos financeiros detalhados.`
+  },
+
+  'criacao-conta': {
+    title: 'Fluxo de criação de conta',
+    url: 'https://outline.amigo.zone/doc/fluxo-de-criacao-de-conta-SOVSaCqmSu',
+    breadcrumb: ['Amigo One', 'Documentação'],
+    content: `O fluxo de criação de conta no **Amigo One** é composto por cinco etapas principais:
+
+---
+
+### 1. Cadastro dos Dados de Acesso
+
+Nesta etapa, o usuário deve fornecer:
+
+* **E-mail de acesso**: Caso o e-mail informado já esteja cadastrado na base, o sistema exibirá uma mensagem informando que o e-mail está em uso.
+* **Senha de acesso**.
+
+---
+
+### 2. Validação por E-mail
+
+Após preencher as informações, será necessário verificar o e-mail informado. O usuário receberá um **código de verificação de 4 dígitos**. Caso não receba o código, o Amigo One disponibiliza a opção de reenviar por meio do botão **"Reenviar código"**.
+
+---
+
+### 3. Cadastro e Validação do Celular
+
+O usuário deve informar um número de celular válido. Um **código de 4 dígitos** será enviado via SMS para o celular informado.
+
+---
+
+### 4. Cadastro de Dados Pessoais
+
+* **Nome completo**
+* **CPF**: Após a criação da conta, o CPF não poderá ser alterado.
+* **Data de nascimento**
+
+Se o usuário for um profissional da área da saúde, serão necessárias também as informações do conselho profissional:
+
+* **Nome do conselho**
+* **Número do conselho**
+* **Estado do conselho**
+
+> *Caso o usuário seja estudante, não será necessário preencher os dados relacionados ao conselho.*
+
+---
+
+### 5. Validação Facial
+
+A validação facial é realizada por meio do sistema de segurança da **UnicoID**. Caso ocorram problemas durante esse processo, o usuário deverá entrar em contato com o suporte para entender o motivo e solicitar a liberação do dispositivo.`
+  },
+
+  'home': {
+    title: 'Home',
+    url: 'https://outline.amigo.zone/doc/home-mOuEalINEm',
+    breadcrumb: ['Amigo One', 'Documentação'],
+    content: `A *home* do Amigo One é dividida por seções, ordenadas da seguinte forma:
+
+1. Meus atalhos
+2. Chat Amigo Intelligence
+3. Próximo evento da agenda
+4. Publicações
+5. Assistente de pagamentos
+6. Central de ajuda
+
+---
+
+## Seção "Meus Atalhos"
+
+A seção "Meus atalhos" permite que os usuários personalizem seus atalhos para acessar recursos de forma rápida e eficiente.
+
+### Atalhos Padrão
+
+Ao abrir o Amigo One pela primeira vez, os seguintes atalhos estarão disponíveis em ordem: **Pacientes, Evento, AmigoSign, Emitir NFS-e e Suporte**.
+
+### Como Personalizar?
+
+#### Adicionar Atalhos
+
+1. Clique no botão **"Adicionar"** para abrir a tela de seleção de atalhos.
+2. Escolha os atalhos desejados em diferentes categorias:
+   * **Geral**: Pacientes, Evento, AmigoSign e Suporte.
+   * **Evento**: Consulta, Teleconsulta, Cirurgia, Plantão e Bloqueio de agenda.
+   * **Contabilidade**: Notas emitidas, Impostos e taxas e Emitir NFS-e.
+   * **Pagamentos**: Pix, Pagar, Receber, Transferir e Extrato.
+3. Os atalhos selecionados serão destacados em azul.
+
+#### Regras de Funcionamento
+
+* Os atalhos do Amigo Pay apenas aparecem caso o usuário tenha a conta Amigo Pay ativa.
+* Se um serviço associado a um atalho for desativado/cancelado, o atalho será mantido, mas redirecionará para a tela de assinatura correspondente.
+
+---
+
+## Seção "Chat Amigo Intelligence"
+
+O **Chat Amigo Intelligence** foi desenvolvido exclusivamente para **profissionais e estudantes da área da saúde**, com o objetivo de oferecer suporte prático no dia a dia.
+
+### Funcionalidades
+
+* **Envio de Arquivos**: Até 5 arquivos nos formatos PDF, JPEG ou PNG.
+* **Envio de Áudio e Transcrição**: Transcrição automática de até 60 segundos.
+* **Prompts Pré-Definidos**: Prompts que ajudam a direcionar a interação com a IA.
+
+### Regras de Assinatura
+
+* **Assinatura Free**: Até **5 mensagens por dia**, independentemente do número de conversas.
+* **Assinatura Premium IA**: **Mensagens ilimitadas**.
+
+---
+
+## Seção "Próximo Evento da Agenda"
+
+Exibe o próximo evento agendado com dia, mês, ano, nome do paciente e valor do atendimento com status (Recebido ou Pendente).
+
+### Regras
+
+* Apenas eventos do dia atual em diante são exibidos.
+* Eventos com status "Faltou", "Cancelado" e "Finalizado" não são considerados.
+* O evento muda automaticamente conforme o horário avança.
+
+---
+
+## Seção "Publicações"
+
+Exibe as últimas postagens em um formato de carrossel com as **5 últimas publicações** feitas na Rede Amigo. A sexta opção redireciona para o feed completo.
+
+---
+
+## Seção "Assistente de Pagamentos"
+
+Disponível para usuários com a conta Amigo Pay ativa. Exibe o número total de obrigações pendentes e o valor somado, mitigando riscos de atrasos e juros.
+
+---
+
+## Seção "Descubra"
+
+Apresenta banners promocionais com CTAs para **Amigo Premium IA** e **Amigo Contábil**. Os banners só aparecem para serviços que o usuário ainda não possui.`
+  },
+
+  'agenda': {
+    title: 'Agenda',
+    url: 'https://outline.amigo.zone/doc/agenda-TM99oOYJzt',
+    breadcrumb: ['Amigo One', 'Documentação'],
+    content: `No módulo de agenda do **Amigo One**, os usuários podem realizar agendamentos para os seguintes tipos de eventos:
+
+* **Consulta**
+* **Teleconsulta**
+* **Cirurgia**
+* **Plantão**
+* **Bloqueio de Agenda**
+
+---
+
+### Configuração da Agenda
+
+Com o objetivo de oferecer **flexibilidade na navegação e planejamento**, o usuário pode escolher a visualização mais adequada:
+
+* **Lista**: Leitura rápida e linear.
+* **Linha do tempo**: Gestão precisa de horários.
+
+---
+
+### Envio de SMS de Agendamento
+
+* Sempre que um profissional de saúde criar um agendamento, o paciente receberá um **SMS de confirmação** automaticamente.
+* **Condição especial**: Se houver agendamentos pendentes (não finalizados) para o mesmo paciente, ao criar um novo agendamento o SMS **não será enviado**. Para que o SMS seja enviado, o profissional precisa finalizar todos os agendamentos relacionados ao paciente antes de criar um novo.`
+  },
+
+  'pacientes': {
+    title: 'Pacientes',
+    url: 'https://outline.amigo.zone/doc/pacientes-KMs8VhKWuH',
+    breadcrumb: ['Amigo One', 'Documentação'],
+    content: `### Cadastro de Pacientes no Amigo One
+
+Para realizar o cadastro de um paciente, é necessário preencher os seguintes dados:
+
+* **Nome completo**: Obrigatório.
+* **E-mail**: Opcional, mas necessário para compartilhamento de prontuários.
+* **CPF**: Obrigatório para pacientes brasileiros.
+* **Registro Nacional Migratório (RNM)** ou **Passaporte**: Para pacientes estrangeiros que desejam acessar prontuários compartilhados.
+
+---
+
+### Dados Complementares
+
+Após o cadastro inicial, o profissional pode completar o perfil com informações adicionais:
+
+#### Informações de Saúde
+
+* Alergias, Peso, Altura, Tipo sanguíneo.
+
+#### Dados de Cadastro
+
+* Nome social, RG, Endereço (CEP, Rua, Número, Complemento, Bairro, Cidade, Estado), Data de nascimento, Convênio (apenas para pacientes compartilhados).
+
+---
+
+### Edição de Pacientes
+
+#### Regras de Edição
+
+* O **CPF** do paciente só poderá ser editado se o profissional tiver uma assinatura premium **ativa**.
+* Somente pacientes cadastrados diretamente no **Amigo One** (base pessoal) poderão ser editados pelo profissional de saúde.
+
+#### Pacientes Compartilhados
+
+* Pacientes compartilhados pelo **Amigo Clinic** terão seus dados editáveis apenas pelo sistema Amigo Clinic.`
+  },
+
+  'prontuario': {
+    title: 'Prontuário',
+    url: 'https://outline.amigo.zone/doc/prontuario-1bXjZT3dGp',
+    breadcrumb: ['Amigo One', 'Documentação', 'Pacientes'],
+    content: `### Prontuário do Paciente
+
+É possível adicionar no prontuário do paciente os seguintes registros:
+
+* Anamnese
+* Anotação
+* Evolução
+* Imagem
+* Teleconsulta
+* Receita digital
+* Solicitação de exame
+* Atestado e outros documentos
+
+---
+
+### Regras Gerais do Prontuário
+
+* Após realizada a **assinatura digital**, o registro **não pode ser editado ou excluído**.
+* Para realizar alterações, será necessário **revalidar** o registro — um novo registro será criado contendo as informações do anterior.
+* Não é permitido assinar digitalmente uma **Anamnese**.
+
+#### Registros Não Assinados Digitalmente
+
+O usuário pode editar ou remover o registro até **23:59 do dia da criação**.
+
+#### Registros Assinados Digitalmente
+
+Não podem ser editados ou removidos — apenas **revalidados**.
+
+---
+
+### Regras de Compartilhamento
+
+* Com **Assinatura Digital ativa**, registros como Receitas Digitais, Solicitações de Exames e Atestados serão assinados automaticamente e o link enviado via SMS.
+* Limite de **5 compartilhamentos por minuto por usuário**. Na 6ª tentativa em 1 minuto, o sistema notifica o usuário e solicita aguardar 60 segundos.
+* Para acessar o prontuário compartilhado, o paciente deve informar:
+  * Os **5 primeiros números do CPF** (brasileiros).
+  * O número completo do **Passaporte** ou **RNM** (estrangeiros).
+
+---
+
+### Ações para Registros Não Assinados
+
+* Gerar PDF, Fixar, Enviar via WhatsApp, Enviar via SMS, Enviar via E-mail, Editar, Revalidar, Remover registro.
+
+### Ações para Registros Assinados Digitalmente
+
+* Gerar PDF, Fixar, Enviar via WhatsApp, Enviar via SMS, Enviar via E-mail, Revalidar.
+
+---
+
+### Configuração do Rodapé dos PDFs
+
+Nos documentos gerados pelo prontuário, é possível exibir informações no rodapé:
+
+* Nome da clínica, Endereço, Telefone para contato, E-mail.
+
+Configuráveis em: **Minha conta → Dados da clínica Amigo One**.`
+  },
+
+  'ia-prontuario': {
+    title: 'IA no Prontuário',
+    url: 'https://outline.amigo.zone/doc/ia-no-prontuario-9BODvYjfBQ',
+    breadcrumb: ['Amigo One', 'Documentação', 'Pacientes', 'Prontuário'],
+    content: `Com o objetivo de integrar o **Amigo Intelligence** ao **Amigo One**, foi desenvolvida uma abordagem que permite aos profissionais de saúde utilizarem a inteligência artificial diretamente no prontuário dos pacientes.
+
+---
+
+### Resumo do Prontuário
+
+* Gera um resumo completo do prontuário de um paciente, com base na maioria dos registros existentes.
+* **Limitação**: A IA não considera arquivos PDF nem imagens presentes no prontuário.
+* O resumo gerado pode ser salvo diretamente no prontuário via botão **"Registrar no prontuário"**.
+
+---
+
+### Análise e Comparação de Imagens
+
+* Realiza análises e comparações de imagens, usando arquivos já presentes no prontuário ou novas imagens.
+* O usuário deve fornecer um breve contexto sobre o que deseja analisar.
+* **Limite**: até **5 imagens por análise**.
+
+---
+
+### Geração de Laudos, Atestados e Declarações
+
+* O **Amigo Intelligence** permite criar laudos, atestados e declarações de forma ágil.
+* O texto gerado pela IA pode ser **editado antes** de ser registrado no prontuário.
+
+---
+
+### Análise de Exames Laboratoriais *(Em breve)*
+
+* Analisa arquivos de exames laboratoriais, retornando uma tabela com as taxas presentes.
+* **Cores**: Verde = normal, Amarelo = alterado (acima ou abaixo do normal).
+* Filtragem para exibir apenas as taxas alteradas.
+
+---
+
+### Justificativa de Solicitação
+
+Com poucos passos, o usuário elabora justificativas médicas para convênios. Baseada nas opções: Exame, Procedimento, Cirurgia, Uso de medicamento, OPME e Acréscimo de procedimento.
+
+---
+
+### Regras de Uso
+
+* **Usuários Free**: Prompts ilimitados, mas apenas em **um paciente por dia**.
+* **Usuários Premium IA**: Acesso ilimitado, sem restrições de pacientes ou prompts.`
+  },
+
+  'rede-amigo': {
+    title: 'Rede Amigo',
+    url: 'https://outline.amigo.zone/doc/rede-amigo-u2NHGlbHqm',
+    breadcrumb: ['Amigo One', 'Documentação'],
+    content: `### Objetivo
+
+Consolidar a Rede Amigo como a principal plataforma de networking para profissionais de saúde, oferecendo uma experiência simples e intuitiva para criar e gerenciar perfis, ampliar conexões e divulgar produções científicas.
+
+---
+
+### Onboarding do Usuário
+
+Para todo novo usuário, no primeiro acesso foi desenvolvido um onboarding personalizado, composto por duas etapas:
+
+1. **Escolha das especialidades e áreas de interesse**
+2. **Conexão com outros usuários**
+
+#### Especialidades/Áreas de Interesse
+
+O profissional ou estudante **deve** escolher **5 ou mais áreas de interesse** para avançar. Entre elas: Clínico Geral, Cirurgia, Psicologia, Pediatria, Psiquiatria, Neurologia, Dermatologia, Ginecologia e Obstetrícia, Ortopedia, Fisioterapia, Odontologia, Fonoaudiologia, Nutrição, Estética, Terapia, Infectologia, Cardiologia, Endocrinologia, Otorrinolaringologia, Reumatologia e Anestesiologia.
+
+#### Médicos
+
+O profissional ou estudante **deve** seguir **5 ou mais usuários** para concluir o onboarding.`
+  },
+
+  'financas': {
+    title: 'Finanças',
+    url: 'https://outline.amigo.zone/doc/financas-qtDqHjeIUY',
+    breadcrumb: ['Amigo One', 'Documentação'],
+    content: `### Módulo "Finanças"
+
+O módulo **"Finanças"** foi projetado para centralizar e facilitar o gerenciamento de todas as funcionalidades financeiras do profissional de saúde em um único lugar.
+
+No módulo, o usuário encontrará os seguintes recursos:
+
+* **Honorários**: Possibilita a visualização e acompanhamento da movimentação financeira relacionada aos agendamentos realizados, garantindo um controle eficiente dos rendimentos.
+
+* **Contabilidade**: Permite o acesso às funcionalidades do **Amigo Contábil**, simplificando a gestão contábil e fiscal.
+
+* **Amigo Pay**: Explore as ferramentas exclusivas disponíveis ao abrir uma conta Amigo Pay, incluindo gerenciamento de recebimentos, transferências e outros recursos financeiros.`
+  },
+
+  'honorarios': {
+    title: 'Honorários',
+    url: 'https://outline.amigo.zone/doc/honorarios-skDgSCtz8r',
+    breadcrumb: ['Amigo One', 'Documentação', 'Finanças'],
+    content: `### Dashboard de Honorários
+
+O dashboard de honorários oferece uma visão clara e organizada das movimentações financeiras do profissional de saúde, permitindo o acompanhamento por mês.
+
+#### Informações Disponíveis
+
+* **Total da Produção Mensal**: Valor total gerado pelos agendamentos em cada mês.
+* **Total Recebido**: Montante já recebido no período.
+* **Total a Receber**: Quantia pendente de recebimento.
+
+---
+
+### Produção por Local de Atendimento
+
+Os agendamentos cadastrados são apresentados em uma listagem organizada por local de atendimento. Para cada local, o usuário pode visualizar:
+
+* O valor total da produção.
+* O total recebido.
+* O total a receber.
+
+#### Detalhamento por Local de Atendimento
+
+Ao acessar o detalhamento de um local específico, o profissional terá acesso a todos os lançamentos registrados, com a possibilidade de:
+
+* **Marcar como Recebido**: Atualize o status do pagamento diretamente no Amigo One.
+* **Emitir Nota Fiscal**: Gere notas fiscais referentes aos lançamentos (exclusivo para clientes com assinatura do **Amigo Contábil**).`
+  },
+
+  'contabilidade': {
+    title: 'Contabilidade',
+    url: 'https://outline.amigo.zone/doc/contabilidade-h1q6cKFFwh',
+    breadcrumb: ['Amigo One', 'Documentação', 'Finanças'],
+    content: `### Área de Contabilidade no Amigo One
+
+A área de contabilidade está organizada em diferentes seções:
+
+* **Notas Fiscais**
+* **Obrigações a Pagar**
+* **Mais Serviços**
+* **Minha Empresa**
+
+---
+
+### Seção: Notas Fiscais
+
+A seção **"Notas Fiscais"** oferece acesso rápido às informações sobre o valor total das notas fiscais geradas no mês.
+
+#### Principais Funcionalidades
+
+1. **Notas Emitidas**
+   * Listagem completa das notas fiscais geradas, organizadas por mês.
+   * Filtrar por status: **Emitida, Processando, Cancelada e Rejeitada**.
+   * Cada nota apresenta: Nome do Tomador, CNPJ/CPF, Valor e Status.
+
+2. **Emitir Nota Fiscal**
+   * A emissão pode ser feita por **local de atendimento** ou diretamente para **pacientes**.`
+  },
+
+  'amigo-pay': {
+    title: 'Amigo Pay',
+    url: 'https://outline.amigo.zone/doc/amigo-pay-nETZy9Hbur',
+    breadcrumb: ['Amigo One', 'Documentação', 'Finanças'],
+    content: null
+  },
+
+  'anestesiologistas': {
+    title: 'Para Anestesiologistas',
+    url: 'https://outline.amigo.zone/doc/amigo-one-para-anestesiologistas-ianesthes-ALnQU9kX2Q',
+    breadcrumb: ['Amigo One', 'Documentação'],
+    content: `### Motivação e Objetivo
+
+Simplificar ao máximo o fluxo de trabalho do anestesiologista, desde o agendamento da consulta pré-anestésica até a geração dos documentos necessários para envio à cooperativa.
+
+---
+
+### Para Quem é?
+
+Profissionais de saúde com **RQE** (Registro de Qualificação de Especialidade) validado pelo **CFM** em **Anestesiologia**.
+
+---
+
+### Funcionalidades Gerais
+
+* **Link de Agendamento e QR Code**: O anestesiologista compartilha um link ou QR Code para que o paciente agende sua consulta de forma autônoma.
+* **Fluxo de Coleta de Dados do Paciente**: Processo otimizado para reunir informações essenciais antes da consulta.
+* **Visualização do Questionário Respondido**: Acesso rápido e organizado às respostas do paciente.
+* **Preenchimento da Ficha Pré-Anestésica com Teleconsulta**: Integração direta durante a teleconsulta.
+* **Geração Automática de Documentos**: Ao final da teleconsulta, são gerados automaticamente:
+  * Termo Anestésico
+  * Termo de Consulta
+  * Guia do Convênio
+  * Ficha Pré-Anestésica
+
+---
+
+### Agendamento Online
+
+Para ativar o agendamento online, o profissional configura:
+
+1. Domínio da página de agendamento
+2. Resumo ou descrição da página
+3. Tempo de duração do atendimento
+4. Horários disponíveis
+5. Convênios aceitos
+
+O link pode ser compartilhado via **QR Code** ou **link direto**.
+
+---
+
+### Consulta Pré-Anestésica (CPA)
+
+**Pelo profissional de saúde**: Ao criar um agendamento, selecione o tipo "Atendimento pré-anestésico". Um SMS será enviado ao paciente com link para preencher o questionário.
+
+**Pelo paciente (via agendamento online)**: O paciente agenda diretamente; a consulta é inserida automaticamente na agenda do médico.
+
+---
+
+### Ficha Pré-Anestésica
+
+A ficha é composta pelas seções: **Identificação, Antecedentes, Avaliação Clínica, Exame Físico, Tabela de Parâmetros e Exames Complementares**.
+
+O status do questionário do paciente é exibido com cores:
+* **Amarelo**: questionário não respondido.
+* **Verde**: questionário respondido.
+
+> *Se o paciente responder o questionário antes da consulta, algumas informações da ficha serão automaticamente preenchidas.*
+
+---
+
+### Geração Automática de Documentos
+
+Após o preenchimento completo da ficha pré-anestésica, **quatro documentos** são gerados automaticamente no prontuário: Termo Anestésico, Termo de Consulta, Guia de Convênio e Ficha Pré-Anestésica.
+
+---
+
+### Envio em Lote de Fichas e Guias
+
+Permite selecionar e exportar diversas fichas e guias ao mesmo tempo. O download gera um **arquivo .ZIP** com a estrutura:
+
+* Pasta com o nome do paciente
+  * Ficha pré-anestésica (PDF)
+  * Termo de consulta (PDF)
+  * Termo de anestesia (PDF)
+  * Guia do convênio (PDF)
+  * Carteirinha do paciente (PNG, se anexada)`
+  }
+};
+
+// ── NAV TREE ──────────────────────────────────────────────────
+const NAV = [
+  { id: 'amigo-one', label: 'Amigo One', icon: '📱', children: [
+    { id: 'criacao-conta', label: 'Fluxo de criação de conta' },
+    { id: 'home', label: 'Home' },
+    { id: 'agenda', label: 'Agenda' },
+    { id: 'pacientes', label: 'Pacientes', children: [
+      { id: 'prontuario', label: 'Prontuário', children: [
+        { id: 'ia-prontuario', label: 'IA no Prontuário' }
+      ]}
+    ]},
+    { id: 'rede-amigo', label: 'Rede Amigo' },
+    { id: 'financas', label: 'Finanças', children: [
+      { id: 'honorarios', label: 'Honorários' },
+      { id: 'contabilidade', label: 'Contabilidade' },
+      { id: 'amigo-pay', label: 'Amigo Pay' }
+    ]},
+    { id: 'anestesiologistas', label: 'Para Anestesiologistas' }
+  ]}
+];
+
+let currentId = null;
+const openGroups = new Set(['amigo-one', 'pacientes', 'prontuario', 'financas']);
+
+// ── MARKDOWN RENDERER ─────────────────────────────────────────
+function fmt(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" class="doc-link">$1</a>');
+}
+
+function mdToHtml(text) {
+  if (!text) return '';
+  const lines = text.split('\n');
+  let html = '';
+  let listType = null;
+
+  const closeList = () => {
+    if (listType) { html += `</${listType}>`; listType = null; }
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    if (/^---+$/.test(trimmed)) { closeList(); html += '<hr>'; continue; }
+    if (trimmed.startsWith('#### ')) { closeList(); html += `<h4>${fmt(trimmed.slice(5))}</h4>`; continue; }
+    if (trimmed.startsWith('### ')) { closeList(); html += `<h3>${fmt(trimmed.slice(4))}</h3>`; continue; }
+    if (trimmed.startsWith('## ')) { closeList(); html += `<h2>${fmt(trimmed.slice(3))}</h2>`; continue; }
+    if (trimmed.startsWith('> ')) { closeList(); html += `<blockquote>${fmt(trimmed.slice(2))}</blockquote>`; continue; }
+
+    // Numbered list
+    if (/^\d+\.\s/.test(trimmed)) {
+      if (listType !== 'ol') { closeList(); html += '<ol>'; listType = 'ol'; }
+      html += `<li>${fmt(trimmed.replace(/^\d+\.\s/, ''))}</li>`; continue;
+    }
+
+    // Bullet list (handle indented)
+    if (/^\s*\*\s/.test(line) && !trimmed.startsWith('**')) {
+      const content = trimmed.slice(2);
+      const isIndented = line.startsWith('  ');
+      if (isIndented && listType === 'ul') {
+        html += `<li style="margin-left:16px">${fmt(content)}</li>`;
+      } else {
+        if (listType !== 'ul') { closeList(); html += '<ul>'; listType = 'ul'; }
+        html += `<li>${fmt(content)}</li>`;
+      }
+      continue;
+    }
+
+    if (trimmed === '' || trimmed === '\\') { closeList(); continue; }
+
+    closeList();
+    html += `<p>${fmt(trimmed)}</p>`;
+  }
+
+  closeList();
+  return html;
+}
+
+// ── RENDER NAV ────────────────────────────────────────────────
+function renderNav(nodes, depth = 0) {
+  let html = '';
+  for (const node of nodes) {
+    const hasChildren = node.children && node.children.length > 0;
+    const isOpen = openGroups.has(node.id);
+    const isActive = node.id === currentId;
+    const indent = depth * 14;
+
+    html += `<div class="tree-group" id="tg-${node.id}">
+      <div class="tree-item${isActive ? ' active' : ''}${hasChildren && isOpen ? ' open' : ''}"
+           onclick="handleTreeClick('${node.id}', ${hasChildren})"
+           style="padding-left:${12 + indent}px">
+        ${depth === 0 && node.icon ? `<span style="font-size:13px">${node.icon}</span>` : ''}
+        <span>${node.label}</span>
+        ${hasChildren ? `<svg class="ti-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>` : ''}
+      </div>`;
+
+    if (hasChildren) {
+      html += `<div class="tree-children${isOpen ? ' open' : ''}" id="tc-${node.id}">`;
+      html += renderNav(node.children, depth + 1);
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+  return html;
+}
+
+function handleTreeClick(id, hasChildren) {
+  if (hasChildren) {
+    if (openGroups.has(id)) openGroups.delete(id);
+    else openGroups.add(id);
+    // toggle children
+    const tc = document.getElementById(`tc-${id}`);
+    const ti = document.querySelector(`#tg-${id} > .tree-item`);
+    if (tc) tc.classList.toggle('open', openGroups.has(id));
+    if (ti) ti.classList.toggle('open', openGroups.has(id));
+  }
+  if (DOCS[id]) selectDoc(id);
+}
+
+// ── SELECT DOC ────────────────────────────────────────────────
+function selectDoc(id) {
+  currentId = id;
+  const doc = DOCS[id];
+  if (!doc) return;
+
+  // Update active state
+  document.querySelectorAll('.tree-item').forEach(el => el.classList.remove('active'));
+  const activeItem = document.querySelector(`#tg-${id} > .tree-item`);
+  if (activeItem) activeItem.classList.add('active');
+
+  // Breadcrumb
+  const bc = document.getElementById('breadcrumb');
+  const parts = [...doc.breadcrumb, doc.title];
+  bc.innerHTML = parts.map((p, i) => i < parts.length - 1
+    ? `<span>${p}</span><span>›</span>`
+    : `<span class="bc-current">${p}</span>`
+  ).join('');
+
+  // Outline link
+  document.getElementById('outlineLink').href = doc.url;
+
+  // Content
+  const area = document.getElementById('contentArea');
+  const updatedDate = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  let body;
+  if (!doc.content) {
+    body = `<div class="doc-wip">
+      <div class="doc-wip-icon">🚧</div>
+      <div class="doc-wip-title">Página em construção</div>
+      <div class="doc-wip-sub">Este conteúdo ainda está sendo elaborado. <a href="${doc.url}" target="_blank" style="color:var(--brand)">Ver no Outline →</a></div>
+    </div>`;
+  } else {
+    body = `<div class="doc-body">${mdToHtml(doc.content)}</div>`;
+  }
+
+  area.innerHTML = `
+    <h1 class="doc-title">${doc.title}</h1>
+    <div class="doc-meta">
+      <span>📄 Documentação do produto</span>
+      <span>·</span>
+      <span>Sincronizado do Outline</span>
+    </div>
+    ${body}
+  `;
+  area.scrollTop = 0;
+}
+
+// ── SEARCH ────────────────────────────────────────────────────
+function filterDocs(q) {
+  q = q.toLowerCase().trim();
+  const allItems = document.querySelectorAll('.tree-item');
+  const allGroups = document.querySelectorAll('.tree-group');
+
+  if (!q) {
+    allItems.forEach(el => el.style.display = '');
+    allGroups.forEach(el => el.style.display = '');
+    NAV[0].children.forEach(n => {
+      const tc = document.getElementById(`tc-${n.id}`);
+      if (tc) tc.classList.toggle('open', openGroups.has(n.id));
+    });
+    return;
+  }
+
+  // Show all parents when searching
+  allItems.forEach(el => el.style.display = '');
+  document.querySelectorAll('.tree-children').forEach(el => el.classList.add('open'));
+
+  // Filter by label
+  for (const [id, doc] of Object.entries(DOCS)) {
+    const el = document.querySelector(`#tg-${id} > .tree-item`);
+    if (!el) continue;
+    const matches = doc.title.toLowerCase().includes(q) ||
+                    (doc.content && doc.content.toLowerCase().includes(q));
+    el.closest('.tree-group').style.display = matches ? '' : 'none';
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+document.getElementById('sidebarTree').innerHTML = renderNav(NAV);
+selectDoc('amigo-one');
+</script>
+</body>
+</html>
