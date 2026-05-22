@@ -549,6 +549,66 @@
   }
   .feat-jira-link:hover { opacity: 1; }
 
+  /* lightbox */
+  .lightbox-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.85);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .lightbox-overlay.active { display: flex; }
+  .lightbox-inner {
+    position: relative;
+    max-width: 92vw;
+    max-height: 90vh;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,.6);
+  }
+  .lightbox-inner img {
+    display: block;
+    max-width: 92vw;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,.55);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s;
+  }
+  .lightbox-close:hover { background: rgba(0,0,0,.85); }
+  .lightbox-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.5);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    padding: 8px 12px;
+    letter-spacing: .5px;
+  }
+
   /* images inside accordion */
   .feat-img-row {
     display: grid;
@@ -564,6 +624,12 @@
     border: 1px solid var(--border);
     box-shadow: 0 4px 16px -4px rgba(0,140,255,.12);
     background: var(--surface);
+    cursor: pointer;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .feat-img-frame:hover {
+    box-shadow: 0 8px 28px -4px rgba(0,140,255,.25);
+    transform: translateY(-2px);
   }
   .feat-frame-bar {
     height: 26px;
@@ -1198,7 +1264,8 @@ function selectRelease(id) {
                 </div>
                 <div class="feat-frame-label">${label}</div>
                 ${src ? `
-                  <img src="${src}" alt="${label}" style="width:100%;display:block;object-fit:contain;max-height:400px;"
+                  <img src="${src}" alt="${label}" style="width:100%;display:block;object-fit:contain;max-height:400px;cursor:zoom-in;"
+                    onclick="openLightbox('${src}','${label}')"
                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                   <div class="feat-frame-placeholder" style="display:none;">
                     <div class="feat-placeholder-icon">🖼️</div>
@@ -1304,6 +1371,33 @@ buildSidebar(RELEASES);
 // auto-select most recent released version
 const lastReleased = RELEASES.find(r => r.released === true) || RELEASES[0];
 if (lastReleased) selectRelease(lastReleased.id);
+</script>
+<!-- Lightbox -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox(event)">
+  <div class="lightbox-inner">
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-label" id="lightboxLabel"></div>
+    <button class="lightbox-close" onclick="closeLightboxBtn()">✕</button>
+  </div>
+</div>
+
+<script>
+function openLightbox(src, label) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxLabel').textContent = label;
+  document.getElementById('lightboxOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightboxBtn() {
+  document.getElementById('lightboxOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function closeLightbox(e) {
+  if (e.target === document.getElementById('lightboxOverlay')) closeLightboxBtn();
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLightboxBtn();
+});
 </script>
 </body>
 </html>
