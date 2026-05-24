@@ -887,13 +887,20 @@ const RELEASES = [
         jiraKey:'ONE-122',
         contexto:'O fluxo de cadastro do Amigo One coletava todas as informações do usuário de uma só vez, gerando atrito e abandono antes da conclusão. Dados como data de nascimento e informações do conselho bloqueavam o acesso imediato ao app.',
         feito:'Criação do fluxo "Complete seu cadastro" em 3 etapas progressivas: dados de acesso (já preenchidos no cadastro inicial), dados pessoais (data de nascimento) e dados do conselho (profissionais) ou dados acadêmicos (estudantes). Acessível por card na home ou ao tentar usar funcionalidades bloqueadas. Progresso salvo por etapa e push notifications de lembrete a cada 7 dias enquanto incompleto. Funcionalidades como Rede Amigo, criação de pacientes e Agendamento Online ficam bloqueadas até a conclusão.',
-        impacto:'Novos usuários têm acesso imediato ao app com liberação gradual das funcionalidades conforme o perfil é completado, reduzindo o abandono no cadastro. Profissionais e estudantes têm fluxos específicos para seus dados.'
+        impacto:'Novos usuários têm acesso imediato ao app com liberação gradual das funcionalidades conforme o perfil é completado, reduzindo o abandono no cadastro. Profissionais e estudantes têm fluxos específicos para seus dados.',
+        images:[
+          { src:'images/complete-cadastro-estudante.png',    label:'Estudante'              },
+          { src:'images/complete-cadastro-profissional.png', label:'Profissional de Saúde'  }
+        ]
       },
       { title:'Onboarding (Primeiro acesso)',
         jiraKey:'ONE-1',
         contexto:'O Amigo One não possuía nenhum fluxo de onboarding para novos usuários, deixando-os sem contexto sobre as principais funcionalidades disponíveis logo após o cadastro.',
         feito:'Desenvolvimento de um fluxo de onboarding com 5 etapas apresentadas no primeiro acesso: Boas-vindas, Agenda, Teleconsulta, Amigo Intelligence e Prontuário eletrônico & Assinatura digital. O usuário pode pular todas as etapas de uma vez pelo botão "Pular tudo" e navegar livremente entre as telas. O fluxo é exibido apenas no primeiro acesso.',
-        impacto:'Novos usuários do Amigo One terão uma experiência de entrada mais clara e contextualizada, compreendendo as funcionalidades disponíveis desde o início e reduzindo barreiras de adoção do aplicativo.'
+        impacto:'Novos usuários do Amigo One terão uma experiência de entrada mais clara e contextualizada, compreendendo as funcionalidades disponíveis desde o início e reduzindo barreiras de adoção do aplicativo.',
+        images:[
+          { src:'images/onboarding-novo.png', label:'Novo Onboarding (5 etapas)', single:true }
+        ]
       },
       { title:'Nova Área Pix',
         jiraKey:'ONE-777',
@@ -908,25 +915,40 @@ const RELEASES = [
         jiraKey:'ONE-1213',
         contexto:'O fluxo de transferência Pix do Amigo Pay estava desatualizado visualmente e com feedbacks de erro genéricos, sem alinhamento com a regulamentação Pix do Bacen, gerando confusão no usuário em casos de falha.',
         feito:'Redesenho completo: inserção e identificação automática do tipo de chave Pix, tela de valor com saldo visível, tela de revisão com campos editáveis (valor e descrição), senha transacional e comprovante compartilhável em PDF. Tratamento de erros alinhado ao Bacen (chave expirada, conta indisponível, falha de processamento e falha de comunicação). CPF/CNPJ mascarado no comprovante.',
-        impacto:'Usuários realizam transferências Pix com mais segurança e clareza, com feedbacks precisos em cada etapa e menos dúvidas sobre o status do pagamento.'
+        impacto:'Usuários realizam transferências Pix com mais segurança e clareza, com feedbacks precisos em cada etapa e menos dúvidas sobre o status do pagamento.',
+        images:[
+          { src:'images/pix-transferencia-antigo.png', label:'Fluxo Antigo'         },
+          { src:'images/pix-transferencia-novo.png',   label:'Novo Fluxo'           },
+          { src:'images/pix-transferencia-erros.png',  label:'Cenários de Erro'     }
+        ]
       },
       { title:'Adição de arquivos no prontuário',
         jiraKey:'ONE-1077',
         contexto:'O prontuário do paciente no Amigo One permitia apenas a adição de imagens, limitando a capacidade dos profissionais de registrar informações completas sobre os seus pacientes.',
         feito:'Ampliação do fluxo de adição de arquivos no prontuário com suporte a três tipos de conteúdo: imagens (JPG e PNG), vídeos (MP4, MOV e HEVC) e documentos (PDF). O novo fluxo permite pré-visualização dos arquivos antes de salvar, remoção de itens selecionados e feedbacks visuais de erro durante o processo de upload.',
-        impacto:'Profissionais de saúde poderão registrar informações de forma mais completa no prontuário, incluindo exames em PDF e vídeos clínicos, melhorando a qualidade dos registros e o acompanhamento dos pacientes.'
+        impacto:'Profissionais de saúde poderão registrar informações de forma mais completa no prontuário, incluindo exames em PDF e vídeos clínicos, melhorando a qualidade dos registros e o acompanhamento dos pacientes.',
+        images:[
+          { src:'images/arquivos-prontuario-novo.png', label:'Novo Fluxo de Arquivos', single:true }
+        ]
       },
       { title:'Recálculo de impostos e taxas',
         jiraKey:'ONE-1147',
         contexto:'Quando um cliente contábil do Amigo One precisava regularizar um imposto atrasado (DAS ou DARF), o recálculo do boleto precisava ser solicitado manualmente via WhatsApp, gerando atrito e dependência do time de atendimento.',
         feito:'Implementação de um fluxo de recálculo e emissão de boleto atualizado diretamente no app: o cliente seleciona uma nova data de vencimento em calendário com regras de negócio (sem retroativos, fins de semana, feriados ou meses futuros) e confirma a emissão do boleto com juros e multas já calculados. Casos especiais (boletos manuais ou fora do range permitido) redirecionam para o WhatsApp com mensagem pré-pronta.',
-        impacto:'Clientes contábeis com impostos atrasados poderão regularizar suas obrigações fiscais de forma autônoma, sem acionar o suporte. Redução de fricção no processo de regularização e melhora na experiência do módulo contábil.'
+        impacto:'Clientes contábeis com impostos atrasados poderão regularizar suas obrigações fiscais de forma autônoma, sem acionar o suporte. Redução de fricção no processo de regularização e melhora na experiência do módulo contábil.',
+        images:[
+          { src:'images/recalculo-impostos-novo.png', label:'Novo Fluxo de Recálculo', single:true }
+        ]
       },
       { title:'Redesign — Listagem de impostos e taxas',
         jiraKey:'ONE-1148',
         contexto:'A listagem e o detalhamento de impostos e taxas do módulo contábil estavam desatualizados visualmente e não ofereciam filtragem adequada nem visibilidade clara sobre obrigações pendentes, atrasadas e pagas.',
         feito:'Redesign completo da tela de obrigações fiscais: listagem agrupada por competência, chips de filtro (Todas em aberto, Atrasadas e Pagas), filtro por mês/ano, valor total automático no header e empty states para cada situação. Detalhamento de cada obrigação exibe valor base, multas, juros, código de barras, link do boleto e toggle "Marcar como pago". Botão "Pagar com Amigo Pay" para pendentes e "Emitir boleto atualizado" para atrasadas.',
-        impacto:'Usuários contábeis terão uma visão mais clara e organizada de suas obrigações fiscais, com controle sobre impostos pendentes, atrasados e pagos sem precisar sair do app, reduzindo a dependência de suporte externo.'
+        impacto:'Usuários contábeis terão uma visão mais clara e organizada de suas obrigações fiscais, com controle sobre impostos pendentes, atrasados e pagos sem precisar sair do app, reduzindo a dependência de suporte externo.',
+        images:[
+          { src:'images/listagem-fiscal-antigo.png', label:'Listagem Antiga' },
+          { src:'images/listagem-fiscal-novo.png',   label:'Nova Listagem'   }
+        ]
       }
     ]
   },
