@@ -121,6 +121,48 @@
     border-color: var(--brand);
   }
 
+  /* clinic team switcher */
+  .clinic-team-switcher {
+    display: none;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    background: rgba(255,255,255,.02);
+  }
+  .clinic-team-switcher.visible { display: flex; }
+  .clinic-team-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.25);
+    margin-bottom: 3px;
+  }
+  .clinic-team-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
+  .team-btn {
+    flex: 1;
+    min-width: 60px;
+    padding: 5px 4px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,.1);
+    background: transparent;
+    color: rgba(255,255,255,.35);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .2px;
+    cursor: pointer;
+    transition: all .15s;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .team-btn:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.6); }
+  .team-btn.active {
+    background: rgba(0,140,255,.15);
+    border-color: var(--brand);
+    color: #fff;
+  }
+
   /* search */
   .sidebar-search {
     padding: 14px 16px;
@@ -795,6 +837,17 @@
     <button class="product-btn"        id="btn-pay"    onclick="switchProduct('pay')">Pay</button>
   </div>
 
+  <!-- Clinic team switcher (hidden unless Clinic is active) -->
+  <div class="clinic-team-switcher" id="clinicTeamSwitcher">
+    <div class="clinic-team-label">Esteira</div>
+    <div class="clinic-team-buttons">
+      <button class="team-btn active" id="team-btn-pipeline" onclick="switchClinicTeam('pipeline')">Pipeline</button>
+      <button class="team-btn"        id="team-btn-root"     onclick="switchClinicTeam('root')">Root</button>
+      <button class="team-btn"        id="team-btn-strategy" onclick="switchClinicTeam('strategy')">Strategy</button>
+      <button class="team-btn"        id="team-btn-breakpoint" onclick="switchClinicTeam('breakpoint')">Breakpoint</button>
+    </div>
+  </div>
+
   <div class="sidebar-search">
     <div class="search-wrap">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -829,45 +882,28 @@ function fmt(s) {
 }
 
 /* ── All Releases ── */
-/* ── Amigo Clinic Releases ── */
-const RELEASES_CLINIC = [
-  { year:2026, id:'c7213', name:'Amigo 7.213.0', releaseDate:'2026-05-18', released:true,
-    desc:'Campo de desconto em notas · Regras fixas de maio.',
+/* ── Amigo Clinic · Team Pipeline ── */
+const RELEASES_CLINIC_PIPELINE = [
+  { year:2026, id:'cp7213', name:'Amigo 7.213.0', releaseDate:'2026-05-20', released:true,
+    desc:'Adição de data-testid na sidebar · data-cy no fluxo de repasse médico.',
     features:[
-      { title:'Campo de desconto no modal de notas',
-        jiraKey:'CLINIC-7302',
-        contexto:'O modal de emissão de notas do Clinic não possuía campo de desconto, limitando a flexibilidade na geração de NFS-e.',
-        feito:'Inserido campo de desconto no modal de notas do Clinic, com reflexo também no NFSe (v2.20.2) e Portal360 (v4.21.0).',
-        impacto:'Clínicas podem aplicar descontos diretamente na emissão de notas, sem necessidade de ajustes manuais pós-emissão.'
+      { title:'Adição de data-testid na nova sidebar',
+        jiraKey:'CLINIC-7343',
+        contexto:'Com a implementação da nova sidebar, os testes automatizados existentes pararam de funcionar pela ausência de atributos data-testid nos módulos.',
+        feito:'Adicionados data-testid em todos os módulos e submódulos da nova sidebar conforme padrão de nomenclatura estabelecido.',
+        impacto:'Testes funcionais voltam a funcionar, aumentando a cobertura de automação e confiabilidade das entregas.'
       },
-      { title:'Regras fixas — 11/05 e 18/05',
-        jiraKey:'CLINIC-7425',
-        contexto:'Adequações pontuais de comportamento para clientes específicos solicitadas nas semanas de 11 e 18 de maio.',
-        feito:'Implementadas regras fixas de ocultação de formas de pagamento para o Grupo Ser Educacional (CLINIC-7466) e demais ajustes das semanas.',
-        impacto:'Comportamentos específicos de clientes atendidos sem impacto no fluxo padrão.'
+      { title:'Adição de data-cy no fluxo de gerar contas do repasse',
+        jiraKey:'CLINIC-7498',
+        contexto:'O fluxo de geração de contas do repasse médico não possuía atributos data-cy, impossibilitando a criação de testes E2E automatizados.',
+        feito:'Instrumentados todos os elementos do fluxo de repasse médico com atributos data-cy seguindo o padrão documentado.',
+        impacto:'Testes E2E podem ser criados para o fluxo de repasse, garantindo maior qualidade nas entregas desse módulo crítico.'
       }
     ]
   },
-  { year:2026, id:'c7210', name:'Amigo 7.210.0', releaseDate:'2026-05-05', released:true,
-    desc:'NFS-e São Paulo: campo Intermediário do Serviço.',
+  { year:2026, id:'cp7207', name:'Amigo 7.207.0', releaseDate:'2026-05-06', released:true,
+    desc:'Receitas C5 (Anabolizantes) · QR Code com restrição por perfil (Paraná) · Pré-natal: campo Altura.',
     features:[
-      { title:'Campo Intermediário do Serviço na NFS-e (São Paulo/SP)',
-        jiraKey:'CLINIC-7211',
-        contexto:'A emissão de NFS-e para o município de São Paulo exigia o campo "Intermediário do Serviço" que não estava disponível no Clinic.',
-        feito:'Incluído o campo Intermediário do Serviço no fluxo de emissão de NFS-e para São Paulo, com reflexo no serviço NFSe (v2.20.0).',
-        impacto:'Clínicas em São Paulo podem emitir NFS-e com conformidade fiscal completa para serviços intermediados.'
-      }
-    ]
-  },
-  { year:2026, id:'c7207', name:'Amigo 7.207.0', releaseDate:'2026-04-27', released:true,
-    desc:'PIS/COFINS · Receitas C5 · QR Code Paraná · Local de Prestação em NFS-e.',
-    features:[
-      { title:'Adequação do campo de Situação Tributária PIS/COFINS',
-        jiraKey:'CLINIC-7242',
-        contexto:'Prefeituras fora do sistema Portão apresentavam divergências no campo de Situação Tributária PIS/COFINS, gerando inconsistências fiscais.',
-        feito:'Campo de Situação Tributária PIS/COFINS adequado para prefeituras fora do Portão, com reflexo no Portal360 (v4.19.0).',
-        impacto:'Emissão de NFS-e com tributação correta para clínicas em municípios não integrados ao sistema Portão.'
-      },
       { title:'Receitas para medicamentos da Lista C5 (Anabolizantes)',
         jiraKey:'CLINIC-7087',
         contexto:'Receitas de medicamentos da Lista C5 (anabolizantes) não seguiam o fluxo regulatório específico exigido pela ANVISA.',
@@ -880,23 +916,17 @@ const RELEASES_CLINIC = [
         feito:'Implementado controle de remoção do QR Code em receitas com restrição por perfil de usuário, específico para o estado do Paraná.',
         impacto:'Gestores controlam quem pode remover o QR Code das receitas, aumentando a conformidade com as normas estaduais.'
       },
-      { title:'Local de Prestação do Serviço no modal de nota',
-        jiraKey:'CLINIC-6634',
-        contexto:'O modal de emissão de notas no Clinic não exibia o campo "Local de Prestação do Serviço", necessário para NFS-e em alguns municípios.',
-        feito:'Adicionado o campo Local de Prestação do Serviço no modal de nota do Clinic.',
-        impacto:'Clínicas com prestação de serviço em local diferente do endereço fiscal emitem NFS-e sem erros de validação municipal.'
+      { title:'Alteração do campo "Altura" no status de parto realizado — Pré-natal',
+        jiraKey:'CLINIC-7161',
+        contexto:'O campo Altura no status de parto realizado do módulo Pré-natal não refletia corretamente o dado clínico necessário.',
+        feito:'Campo Altura ajustado no status de parto realizado dentro do módulo de Pré-natal.',
+        impacto:'Registro clínico de parto mais preciso, garantindo integridade dos dados no prontuário pré-natal.'
       }
     ]
   },
-  { year:2026, id:'c7195', name:'Amigo 7.195.0', releaseDate:'2026-04-06', released:true,
-    desc:'Valor aproximado de tributos em NFS-e · Impressos de prontuário com data de nascimento.',
+  { year:2026, id:'cp7195', name:'Amigo 7.195.0', releaseDate:'2026-04-08', released:true,
+    desc:'Data de nascimento nos impressos de prontuário.',
     features:[
-      { title:'Nova Seção: Valor Aproximado dos Tributos',
-        jiraKey:'CLINIC-6577',
-        contexto:'A legislação exige a exibição do valor aproximado dos tributos em documentos fiscais. O Clinic não possuía esse campo na emissão de NFS-e.',
-        feito:'Inserida nova seção "Valor Aproximado dos Tributos" na emissão de NFS-e, com reflexo no NFSe (v2.16.0) e Portal360 (v4.11.0).',
-        impacto:'Clínicas passam a emitir NFS-e em conformidade com a Lei 12.741/2012 (transparência fiscal ao consumidor).'
-      },
       { title:'Data de nascimento do paciente nos impressos de prontuário',
         jiraKey:'CLINIC-6762',
         contexto:'Os impressos gerados pelo prontuário não exibiam a data de nascimento do paciente, dificultando a identificação em documentos clínicos.',
@@ -905,15 +935,9 @@ const RELEASES_CLINIC = [
       }
     ]
   },
-  { year:2026, id:'c7186', name:'Amigo 7.186.1', releaseDate:'2026-03-16', released:true,
-    desc:'PIS/COFINS em NFS-e · Descontinuação Contas do Paciente legado · Ajustes de receituário.',
+  { year:2026, id:'cp7186', name:'Amigo 7.186.1', releaseDate:'2026-03-18', released:true,
+    desc:'Descontinuação Contas do Paciente legado · Remoção do aviso RDC 864/2024.',
     features:[
-      { title:'Inclusão de campos PIS/COFINS na emissão de NFS-e',
-        jiraKey:'CLINIC-6482',
-        contexto:'A emissão de NFS-e não contemplava os campos de PIS e COFINS exigidos por alguns municípios, causando rejeição de notas.',
-        feito:'Adicionados campos de PIS/COFINS no fluxo de emissão de NFS-e do Clinic.',
-        impacto:'Clínicas em municípios que exigem PIS/COFINS na NFS-e conseguem emitir notas sem rejeição fiscal.'
-      },
       { title:'Descontinuação da versão legada — Contas do Paciente',
         jiraKey:'CLINIC-5351',
         contexto:'A página de Contas do Paciente possuía uma versão legada desatualizada coexistindo com a versão nova, gerando confusão e manutenção duplicada.',
@@ -928,18 +952,7 @@ const RELEASES_CLINIC = [
       }
     ]
   },
-  { year:2026, id:'c7184', name:'Amigo 7.184.0', releaseDate:'2026-03-02', released:true,
-    desc:'Implementação do CST no módulo fiscal.',
-    features:[
-      { title:'Implementação do CST',
-        jiraKey:'CLINIC-6253',
-        contexto:'O módulo fiscal do Clinic não suportava o Código de Situação Tributária (CST), necessário para conformidade fiscal em alguns regimes.',
-        feito:'Implementado suporte ao CST no módulo fiscal do Clinic, com reflexo no Portal360 (v4.8.4).',
-        impacto:'Clínicas sob regimes tributários que exigem CST passam a ter o campo disponível, garantindo conformidade fiscal.'
-      }
-    ]
-  },
-  { year:2026, id:'c7181', name:'Amigo 7.181.3', releaseDate:'2026-02-23', released:true,
+  { year:2026, id:'cp7181', name:'Amigo 7.181.3', releaseDate:'2026-02-23', released:true,
     desc:'Nome de faturamento por procedimento.',
     features:[
       { title:'Nome de faturamento do procedimento',
@@ -950,18 +963,7 @@ const RELEASES_CLINIC = [
       }
     ]
   },
-  { year:2026, id:'c7175', name:'Amigo 7.175.0', releaseDate:'2026-02-02', released:true,
-    desc:'Código de Benefício municipal na NFS-e.',
-    features:[
-      { title:'Código de Benefício municipal',
-        jiraKey:'CLINIC-6255',
-        contexto:'Alguns municípios exigem o Código de Benefício Fiscal na emissão de NFS-e. O Clinic não suportava esse campo, causando rejeição de notas.',
-        feito:'Implementado o Código de Benefício municipal no fluxo de emissão de NFS-e, com reflexo no NFSe (v2.14.0) e Portal360 (v4.7.0).',
-        impacto:'Clínicas em municípios com benefício fiscal municipal emitem NFS-e sem rejeição, com redução automática de tributos aplicada.'
-      }
-    ]
-  },
-  { year:2026, id:'c7172', name:'Amigo 7.172.2', releaseDate:'2026-01-15', released:true,
+  { year:2026, id:'cp7172', name:'Amigo 7.172.2', releaseDate:'2026-01-15', released:true,
     desc:'Filtro de Solicitações de Cirurgia · Endereço alternativo no papel timbrado.',
     features:[
       { title:'Filtro de Hospital/Contratado Solicitado em Solicitações de Cirurgia',
@@ -980,12 +982,865 @@ const RELEASES_CLINIC = [
   }
 ];
 
+/* ── Amigo Clinic · Team Root ── */
+const RELEASES_CLINIC_ROOT = [
+  { year:2026, id:'cr7213', name:'Amigo 7.213.0', releaseDate:'2026-05-20', released:true,
+    desc:'Campo de desconto no modal de notas (NFS-e Nacional).',
+    features:[
+      { title:'Campo de desconto no modal de notas',
+        jiraKey:'CLINIC-7302',
+        contexto:'O modal de emissão de notas do Clinic não possuía campos de desconto (incondicionado e condicionado), limitando a conformidade com o modelo NFS-e Nacional.',
+        feito:'Adicionados campos de Desconto Incondicionado e Desconto Condicionado no modal de emissão de notas, com reflexo no NFSe (v2.20.2) e Portal360 (v4.21.0).',
+        impacto:'Clínicas podem aplicar descontos diretamente na emissão de notas, em conformidade com o Portal Nacional da NFS-e.'
+      }
+    ]
+  },
+  { year:2026, id:'cr7210', name:'Amigo 7.210.0', releaseDate:'2026-05-13', released:true,
+    desc:'Campo Intermediário do Serviço na NFS-e (São Paulo/SP).',
+    features:[
+      { title:'Campo Intermediário do Serviço na NFS-e (São Paulo/SP)',
+        jiraKey:'CLINIC-7211',
+        contexto:'A emissão de NFS-e para o município de São Paulo exigia o campo "Intermediário do Serviço" que não estava disponível no Clinic.',
+        feito:'Incluído o campo Intermediário do Serviço no fluxo de emissão de NFS-e para São Paulo, com reflexo no serviço NFSe (v2.20.0).',
+        impacto:'Clínicas em São Paulo podem emitir NFS-e com conformidade fiscal completa para serviços intermediados.'
+      }
+    ]
+  },
+  { year:2026, id:'cr7207', name:'Amigo 7.207.0', releaseDate:'2026-05-06', released:true,
+    desc:'PIS/COFINS para prefeituras fora do Portal Nacional · Local de Prestação do Serviço.',
+    features:[
+      { title:'Adequação do campo de Situação Tributária PIS/COFINS',
+        jiraKey:'CLINIC-7242',
+        contexto:'Prefeituras fora do Portal Nacional (Fortaleza e Brasília) apresentavam divergências no campo PIS/COFINS, gerando inconsistências fiscais.',
+        feito:'Campo de Situação Tributária PIS/COFINS adequado para prefeituras fora do Portal Nacional, com reflexo no Portal360 (v4.19.0).',
+        impacto:'Emissão de NFS-e com tributação correta para clínicas em municípios não integrados ao Portal Nacional.'
+      },
+      { title:'Local de Prestação do Serviço no modal de nota',
+        jiraKey:'CLINIC-6634',
+        contexto:'O modal de emissão de notas no Clinic não exibia o campo "Local de Prestação do Serviço", necessário para NFS-e em alguns municípios.',
+        feito:'Adicionado o campo Local de Prestação do Serviço no modal de nota do Clinic.',
+        impacto:'Clínicas com prestação de serviço em local diferente do endereço fiscal emitem NFS-e sem erros de validação municipal.'
+      }
+    ]
+  },
+  { year:2026, id:'cr7195', name:'Amigo 7.195.0', releaseDate:'2026-04-08', released:true,
+    desc:'Nova seção: Valor Aproximado dos Tributos na NFS-e.',
+    features:[
+      { title:'Nova Seção: Valor Aproximado dos Tributos',
+        jiraKey:'CLINIC-6577',
+        contexto:'A legislação exige a exibição do valor aproximado dos tributos em documentos fiscais. O Clinic não possuía esse campo na emissão de NFS-e.',
+        feito:'Inserida nova seção "Valor Aproximado dos Tributos" na emissão de NFS-e, com reflexo no NFSe (v2.16.0) e Portal360 (v4.11.0).',
+        impacto:'Clínicas passam a emitir NFS-e em conformidade com a Lei 12.741/2012 (transparência fiscal ao consumidor).'
+      }
+    ]
+  },
+  { year:2026, id:'cr7186', name:'Amigo 7.186.1', releaseDate:'2026-03-18', released:true,
+    desc:'Inclusão de campos PIS/COFINS na emissão de NFS-e.',
+    features:[
+      { title:'Inclusão de campos PIS/COFINS na emissão de NFS-e',
+        jiraKey:'CLINIC-6482',
+        contexto:'A emissão de NFS-e não contemplava os campos de PIS e COFINS exigidos por alguns municípios, causando rejeição de notas.',
+        feito:'Adicionados campos de PIS/COFINS no fluxo de emissão de NFS-e do Clinic.',
+        impacto:'Clínicas em municípios que exigem PIS/COFINS na NFS-e conseguem emitir notas sem rejeição fiscal.'
+      }
+    ]
+  },
+  { year:2026, id:'cr7184', name:'Amigo 7.184.0', releaseDate:'2026-03-04', released:true,
+    desc:'Implementação do CST no módulo fiscal.',
+    features:[
+      { title:'Implementação do CST',
+        jiraKey:'CLINIC-6253',
+        contexto:'O módulo fiscal do Clinic não suportava o Código de Situação Tributária (CST), necessário para conformidade fiscal em alguns regimes.',
+        feito:'Implementado suporte ao CST no módulo fiscal do Clinic, com reflexo no Portal360 (v4.8.4).',
+        impacto:'Clínicas sob regimes tributários que exigem CST passam a ter o campo disponível, garantindo conformidade fiscal.'
+      }
+    ]
+  },
+  { year:2026, id:'cr7175', name:'Amigo 7.175.0', releaseDate:'2026-02-02', released:true,
+    desc:'Código de Benefício municipal na NFS-e.',
+    features:[
+      { title:'Código de Benefício municipal',
+        jiraKey:'CLINIC-6255',
+        contexto:'Alguns municípios exigem o Código de Benefício Fiscal na emissão de NFS-e. O Clinic não suportava esse campo, causando rejeição de notas.',
+        feito:'Implementado o Código de Benefício municipal no fluxo de emissão de NFS-e, com reflexo no NFSe (v2.14.0) e Portal360 (v4.7.0).',
+        impacto:'Clínicas em municípios com benefício fiscal municipal emitem NFS-e sem rejeição, com redução automática de tributos aplicada.'
+      }
+    ]
+  }
+];
+
+/* ── Amigo Clinic · Team Strategy ── */
+const RELEASES_CLINIC_STRATEGY = [
+  { year:2026, id:'cs-2605', name:'Entrega 18/05', releaseDate:'2026-05-18', released:true,
+    desc:'Tab de Planos no Prontuário · APIs de tratamento Oral Unic · Busca por executante/paciente na Produção de Convênio.',
+    features:[
+      { title:'Tab de Planos no Prontuário',
+        jiraKey:'CLINIC-6235',
+        contexto:'Não havia visão consolidada dos planos odontológicos ativos e seus tratamentos disponíveis para execução diretamente no prontuário do paciente.',
+        feito:'Implementada aba "Planos" no prontuário com listagem de planos elegíveis, status por consumo e ações de agendar, marcar como feito e reabrir tratamentos.',
+        impacto:'Dentistas e equipes administrativas passam a ter visibilidade e controle operacional completo dos tratamentos contratados diretamente no prontuário, com rastreabilidade para auditoria.'
+      },
+      { title:'API para consumo individual de Budget',
+        jiraKey:'CLINIC-6579',
+        contexto:'Não existia endpoint centralizado para processar a conclusão de itens de orçamento individuais ("Marcar como feito") de forma transacional no projeto Oral Unic.',
+        feito:'Criação do endpoint que cria o atendimento, consome o crédito do orçamento e registra no prontuário dentro de uma única transação com rollback garantido.',
+        impacto:'Execuções avulsas de tratamentos sem agenda passam a consumir créditos de forma segura, atômica e com rastreabilidade financeira.'
+      },
+      { title:'API para Reabertura de Tratamento e Reversão de Créditos',
+        jiraKey:'CLINIC-6597',
+        contexto:'Quando um tratamento era concluído equivocadamente, não havia mecanismo para desfazer o consumo de crédito e os registros de atendimento, sem rollback transacional.',
+        feito:'Criado endpoint que reverte o consumo de crédito e remove/cancela atendimentos do tipo PROCEDURE vinculados, com rollback total em caso de erro.',
+        impacto:'Equipes clínicas passam a corrigir finalizações equivocadas de tratamentos sem perda de dados financeiros, com auditoria de quem realizou a reabertura.'
+      },
+      { title:'API para Finalização de Atendimento e Consumo de Crédito',
+        jiraKey:'CLINIC-6599',
+        contexto:'Não havia endpoint centralizado e seguro para finalizar atendimentos do tipo tratamento e debitar os créditos correspondentes do orçamento do paciente.',
+        feito:'Criado endpoint que itera sobre a lista de tratamentos concluídos, valida status e realiza o débito de crédito antes de atualizar o status para "Finalizado".',
+        impacto:'Finalização de atendimentos de tratamento passa a ser segura e consistente, com saldo do orçamento sempre atualizado corretamente.'
+      },
+      { title:'Versionamento de orçamentos ao consumir créditos',
+        jiraKey:'CLINIC-6638',
+        contexto:'A versão dos orçamentos não era atualizada ao serem consumidos, comprometendo a rastreabilidade do estado financeiro dos planos odontológicos.',
+        feito:'Implementada lógica de versionamento dos orçamentos no momento do consumo, registrando a mudança de estado quando créditos são utilizados.',
+        impacto:'Maior rastreabilidade e consistência no histórico financeiro dos orçamentos odontológicos do Oral Unic.'
+      },
+      { title:'Busca por Executante e Paciente na Produção de Convênio',
+        jiraKey:'CLINIC-6373',
+        contexto:'Na nova tela de Produção de Convênio, o campo de busca aceitava apenas valores numéricos (número da guia), impedindo pesquisas por nome amplamente usadas na tela legada.',
+        feito:'Ampliado o campo de busca para aceitar nome de executante e paciente com correspondência parcial, restaurando paridade com a tela legada.',
+        impacto:'Usuários localizam guias de forma mais rápida e flexível, sem perda de funcionalidade em relação à versão anterior.'
+      },
+      { title:'Ajuste no relatório diário de produtividade — Grupo Ser',
+        jiraKey:'CLINIC-7347',
+        contexto:'O job de envio do relatório diário de produtividade executava às 20h, deixando o dia corrente fora do relatório e gerando lacuna de dados para a gestão.',
+        feito:'Horário de execução alterado para a madrugada, ajustando o período para cobrir os 30 dias anteriores incluindo o dia anterior completo (D-1).',
+        impacto:'O Grupo Ser passa a receber diariamente ao amanhecer um relatório completo, eliminando a lacuna de dados de produtividade.'
+      }
+    ]
+  },
+  { year:2026, id:'cs-2604c', name:'Entrega 30/04', releaseDate:'2026-04-30', released:true,
+    desc:'Agendamento e Check-in de Tratamento · Forma de pagamento vinculada a Orçamento.',
+    features:[
+      { title:'Agendar/Check-in Tratamento',
+        jiraKey:'CLINIC-6319',
+        contexto:'Não existia rota de agendamento dedicada a tratamentos odontológicos com validação de saldo de plano, seleção de etapas e controle de crédito no contexto Oral Unic.',
+        feito:'Criado fluxo completo de agendamento e check-in para tratamentos, com filtragem por plano ativo com saldo, seleção de múltiplas etapas, validação de crédito e controle de estados do atendimento.',
+        impacto:'Clínicas Oral Unic passam a agendar tratamentos com segurança financeira garantida, evitando execuções sem saldo disponível.'
+      },
+      { title:'Forma de pagamento vinculada a Orçamento',
+        jiraKey:'CLINIC-6280',
+        contexto:'O fluxo financeiro dos atendimentos passou a ser baseado em orçamentos com créditos, mas não existia forma de pagamento no sistema que representasse esse modelo.',
+        feito:'Criada nova forma de pagamento "Orçamento" que permite selecionar orçamento e item específico a consumir, vinculando corretamente o item ao procedimento na conclusão do tratamento.',
+        impacto:'O consumo de créditos de orçamentos odontológicos passa a ser rastreável e preciso, eliminando ambiguidades em cenários com múltiplos tratamentos iguais.'
+      }
+    ]
+  },
+  { year:2026, id:'cs-2604b', name:'Entrega 22/04', releaseDate:'2026-04-22', released:true,
+    desc:'Estrutura de Etapas · Agendamento de Avaliação · Pré-seleção de Budget no agendador.',
+    features:[
+      { title:'Configuração da estrutura de Etapas',
+        jiraKey:'CLINIC-6298',
+        contexto:'A execução clínica de tratamentos odontológicos no Oral Unic é fracionada em etapas que definem a duração do atendimento, mas não havia estrutura técnica nem interface para gerenciá-las.',
+        feito:'Criação da tabela de etapas, CRUD no backoffice e lógica de cálculo de duração do agendamento baseada na soma das etapas selecionadas.',
+        impacto:'Profissionais e gestores passam a ter controle granular da execução clínica por etapas, com duração de atendimento calculada automaticamente.'
+      },
+      { title:'Agendar/Check-in Avaliação',
+        jiraKey:'CLINIC-6317',
+        contexto:'Não havia rota dedicada de agendamento para consultas de avaliação odontológica no Oral Unic, que opera com regras distintas do tratamento (sem financeiro e sem etapas).',
+        feito:'Criado fluxo completo de agendamento e check-in para avaliações, sem cobrança, sem vínculo com plano, com validação de campos obrigatórios.',
+        impacto:'Gestores e recepcionistas agendam avaliações de forma rápida e correta, sem misturar regras financeiras do fluxo de tratamento.'
+      },
+      { title:'Pré-seleção de Budget e Procedimento no agendador',
+        jiraKey:'CLINIC-6724',
+        contexto:'Ao acessar o agendador v2 com parâmetros de tratamento na URL, o sistema não realizava preenchimento automático do orçamento e procedimento, obrigando seleção manual de dados já definidos.',
+        feito:'Implementado autoselect de orçamento e procedimento a partir dos parâmetros budgetId e budgetProcedureMatmedId na query string quando mode=treatment está presente.',
+        impacto:'Redução de etapas manuais no agendamento de tratamentos originados do prontuário, tornando o fluxo mais ágil e menos sujeito a erros.'
+      }
+    ]
+  },
+  { year:2026, id:'cs-2604a', name:'Entrega 14/04', releaseDate:'2026-04-14', released:true,
+    desc:'Ajustes em Configurações de Agenda para associação de salas (Oral Unic).',
+    features:[
+      { title:'Configurações de Agenda: associação de salas e classificações de atendimento',
+        jiraKey:'CLINIC-6381',
+        contexto:'O projeto Oral Unic exigia ajustes nas Configurações de Agenda e Tipos de Atendimento para viabilizar o fluxo de associação de consultórios, sem alterar o comportamento padrão para outros clientes.',
+        feito:'Incluída obrigatoriedade de Unidade padrão nas configurações de agenda e adicionadas classificações de atendimento (Avaliação e Tratamento) exclusivas para o Oral Unic.',
+        impacto:'Habilitação do fluxo de associação de consultórios no Oral Unic com validações corretas e sem impacto para os demais clientes da plataforma.'
+      }
+    ]
+  },
+  { year:2026, id:'cs-2603', name:'Entrega 30/03', releaseDate:'2026-03-30', released:true,
+    desc:'Permissionamento no Atendimento · Exportação de relatório histórico para o Grupo Ser Educacional.',
+    features:[
+      { title:'Permissões de bloqueio e acesso no Atendimento',
+        jiraKey:'CLINIC-6026',
+        contexto:'As regras de bloqueio, exibição e habilitação de ações no atendimento existiam de forma dispersa e implícita, gerando inconsistência de comportamento e risco de ações indevidas.',
+        feito:'Implementação centralizada das regras de permissionamento para todos os botões e campos do Check-in e Check-out, considerando status, tipo de atendimento, pagamento e permissões do usuário.',
+        impacto:'Maior segurança e previsibilidade no fluxo de atendimento, impedindo ações indevidas e facilitando manutenção futura.'
+      },
+      { title:'Exportação de relatório de agendamento e produção médica — Grupo Ser',
+        jiraKey:'CLINIC-6771',
+        contexto:'O Grupo Ser Educacional passou por auditoria de Controladoria e solicitou análise detalhada do relatório de agendamento e produção médica de jan/2023 a fev/2026.',
+        feito:'Extração e exportação do relatório de agendamento e produção médica cobrindo o período histórico completo solicitado pelo grupo.',
+        impacto:'Suporte ao processo de auditoria com dados históricos completos e rastreáveis, atendendo a demanda dos acionistas do grupo.'
+      }
+    ]
+  }
+];
+
+/* ── Amigo Clinic · Team Breakpoint ── */
+const RELEASES_CLINIC_BREAKPOINT = [
+  { year:2026, id:'cb-2604', name:'Entrega 07/04', releaseDate:'2026-04-07', released:true,
+    desc:'View de Encaixe no Calendário da Agenda.',
+    features:[
+      { title:'View de Encaixe no Calendário',
+        jiraKey:'CLINIC-6194',
+        contexto:'A Agenda passou a lidar com um novo tipo de agendamento chamado "encaixe", que não ocupa horário fixo na grade do calendário, mas não havia experiência dedicada para sinalizá-lo e gerenciá-lo.',
+        feito:'Implementada view completa de encaixe no calendário com sinalização visual, card com popover contextual, acesso à lista de encaixes via sidebar/drawer e ação de converter encaixe em atendimento regular — funcionando nas visões Dia e Semana.',
+        impacto:'Usuários identificam e operam encaixes diretamente no calendário de forma clara e integrada ao fluxo natural da Agenda, reduzindo fricção operacional no atendimento por encaixe.'
+      }
+    ]
+  }
+];
+
+const CLINIC_TEAMS = {
+  pipeline:  { label: 'Team Pipeline',  footer: 'Amigo Clinic · Pipeline',  releases: RELEASES_CLINIC_PIPELINE },
+  root:      { label: 'Team Root',      footer: 'Amigo Clinic · Root',      releases: RELEASES_CLINIC_ROOT },
+  strategy:  { label: 'Team Strategy',  footer: 'Amigo Clinic · Strategy',  releases: RELEASES_CLINIC_STRATEGY },
+  breakpoint:{ label: 'Team Breakpoint',footer: 'Amigo Clinic · Breakpoint',releases: RELEASES_CLINIC_BREAKPOINT }
+};
+
 /* ── Amigo Pay Releases ── */
 const RELEASES_PAY = [
-  { year:2026, id:'pay001', name:'Em breve', releaseDate:'2026-06-01', released:false,
-    desc:'As releases do Amigo Pay serão adicionadas conforme as versões forem marcadas no Jira.',
-    features:[]
-  }
+
+  /* ────── PRÓXIMAS ENTREGAS ────── */
+
+  { year:2026, id:'pay-roadmap', name:'Sem previsão definida', releaseDate:'', released:false,
+    desc:'Conta Bancária · Contabilidade · Comprovante · MuxiPay · Link de Pagamento',
+    features:[
+      { title:'Notificação e feedback das falhas de pagamento',
+        jiraKey:'PAY-1982',
+        contexto:'Falhas de pagamento assíncronas (retornadas posteriormente via webhook do banco, ex: antifraude) não são notificadas ao usuário — ele pode acreditar que o pagamento foi concluído quando na verdade foi recusado em análise posterior.',
+        feito:'Notificações bancárias para falhas assíncronas; atualização da finança para status de erro na listagem; registro no log da transação com código e motivo detalhado interno, e mensagem adequada para o usuário externo.',
+        impacto:'Usuário ganha visibilidade imediata de falhas; redução de cobranças não recebidas por desconhecimento.'
+      },
+      { title:'[LOG] Detalhamento das permissões AmigoPay atribuídas ao usuário',
+        jiraKey:'PAY-2447',
+        contexto:'O log de auditoria não detalha quais permissões do AmigoPay foram atribuídas a um usuário em uma alteração — informação relevante para investigação de incidentes e revisão de acesso.',
+        feito:'Inclusão das permissões AmigoPay atribuídas no detalhamento do log de alteração de usuário.',
+        impacto:'Auditoria de permissões fica completa, com rastreabilidade granular de mudanças de acesso.'
+      },
+      { title:'Criação de link de pagamento para pacientes estrangeiros',
+        jiraKey:'PAY-2016',
+        contexto:'A geração de link de pagamento exige CPF ou CNPJ, inviabilizando o atendimento de pacientes estrangeiros (sem documento brasileiro).',
+        feito:'Geração de link de pagamento pela Gestão de Cobrança para pacientes estrangeiros — fluxo sem dependência obrigatória de CPF/CNPJ.',
+        impacto:'Clínicas que atendem público estrangeiro passam a usar o AmigoPay para essa base de pacientes.'
+      },
+      { title:'Envio de comprovante de pagamento',
+        jiraKey:'PAY-1060',
+        contexto:'Após confirmação de pagamento, não há geração automática de comprovante — o paciente depende do suporte para obter a evidência, sobretudo nas transações por maquininha e link de pagamento.',
+        feito:'Geração automática do comprovante após confirmação do pagamento; envio obrigatório via WhatsApp para maquininha; disponibilização imediata ao paciente no link de pagamento; comprovante com valor, data/hora, identificação da transação.',
+        impacto:'Paciente recebe comprovante automaticamente; redução de demanda recorrente de suporte por evidência de pagamento.'
+      },
+      { title:'Realizar pagamento que vem da nossa contabilidade/Portal 360 · Melhorias',
+        jiraKey:'PAY-446',
+        contexto:'A maioria dos lançamentos vindos do Portal 360 (contabilidade) está em tabelas separadas da new_finances — Company_payments, finance_tax_employees, New_finance_taxes — sem as estruturas necessárias para serem pagos pelo AmigoPay.',
+        feito:'Migração faseada dos lançamentos do Portal 360 para a tabela new_finances, envolvendo os demais produtos.',
+        impacto:'Folha de pagamento, taxas e demais lançamentos do Portal 360 passam a ser pagos via AmigoPay sem retrabalho.'
+      },
+      { title:'Possibilitar a baixa dos lotes AmigoPay em outra conta bancária',
+        jiraKey:'PAY-2444',
+        contexto:'A baixa de lotes AmigoPay hoje é restrita a uma conta específica, sem flexibilidade para reconciliar em outra conta bancária.',
+        feito:'Habilitação da baixa dos lotes AmigoPay em outra conta bancária.',
+        impacto:'Clínica reconcilia lotes na conta que faz sentido para o controle financeiro interno.'
+      },
+      { title:'Inutilizar o MuxiPay · Épico',
+        jiraKey:'PAY-2440',
+        contexto:'O MuxiPay é uma integração legada que coexiste com a arquitetura atual do AmigoPay (Dock e, na transição, Zoop) — mantê-lo gera duplicidade de fluxos, débito técnico e risco operacional.',
+        feito:'Iniciativa de descomissionamento do MuxiPay — épico em fase inicial.',
+        impacto:'Eliminação de um caminho legado da plataforma; simplificação da malha de integrações de pagamento.'
+      },
+      { title:'Comprovante de cancelamento de uma cobrança',
+        jiraKey:'PAY-1979',
+        contexto:'Cancelamentos no portal da maquineta demandam uma "carta de cancelamento" como comprovante para o cliente; a Dock disponibiliza mediante ticket com SLA de 48h, e o time do Pay emite a carta manualmente.',
+        feito:'Geração no sistema do comprovante de cancelamento de cobrança realizada no portal da maquineta.',
+        impacto:'Atendimento imediato ao cliente com comprovante de cancelamento; libera o time do Pay de tarefa recorrente.'
+      },
+      { title:'Transferência entre contas a partir do AmigoPay',
+        jiraKey:'PAY-2213',
+        contexto:'O AmigoPay ainda não oferece transferência entre contas iniciada pelo próprio produto — operação que hoje precisa ser feita fora da plataforma.',
+        feito:'Fluxo de transferência entre contas a partir do AmigoPay.',
+        impacto:'Clínica movimenta saldos entre contas dentro do AmigoPay, sem precisar recorrer ao internet banking externo.'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202630', name:'Semana 30 · 20 Jul – 26 Jul', releaseDate:'2026-07-23', released:false,
+    desc:'Observabilidade · Atendimento · Cobrança · Limites',
+    features:[
+      { title:'Redesign do componente de seleção de pagador na criação de uma cobrança',
+        jiraKey:'PAY-1570',
+        contexto:'A tela de Nova Cobrança ainda usa o componente antigo de seleção de pagador, fora do padrão de design da plataforma.',
+        feito:'Redesign do componente para dropdown com opções de pagador existentes e criação inline de novo pagador quando não encontrado na lista.',
+        impacto:'Criação de cobrança fica mais rápida, com cadastro de pagador no mesmo fluxo.'
+      },
+      { title:'Redesign do modal de cobrar com Amigo Pay no fluxo de Atendimento',
+        jiraKey:'PAY-2035',
+        contexto:'O modal de atendimento usa dropdown com três opções — paradigma antigo que gera fricção cognitiva e está desalinhado do novo checkout do orçamento.',
+        feito:'Substituição das opções (Maquininha e Link de Pagamento) pelo fluxo redesenhado do novo checkout: interface modal com decisão em contexto.',
+        impacto:'Curva de aprendizado reduzida e paridade entre os fluxos de atendimento e orçamento.'
+      },
+      { title:'Implementação de tracers do DataDog nas APIs do AmigoPay',
+        jiraKey:'PAY-2296',
+        contexto:'As APIs do AmigoPay não têm instrumentação de APM — latência por endpoint, rastreio distribuído entre serviços e diagnóstico contextualizado de erros dependem de logs avulsos.',
+        feito:'Implementação de tracers do Datadog APM nas APIs do AmigoPay: criação de traces por requisição, spans por operação, propagação de contexto via header HTTP.',
+        impacto:'Visibilidade end-to-end de latência e erros; diagnóstico de incidentes deixa de depender de correlação manual de logs.'
+      },
+      { title:'Mecanismo de segurança para Habilitar/Desabilitar Pagamentos',
+        jiraKey:'PAY-1996',
+        contexto:'Em incidentes que comprometem Pix, Boleto ou TED, o time precisa hoje de deploy ou intervenção em banco para desabilitar o método de pagamento em produção.',
+        feito:'Mecanismo via Slack com comandos /habilitar-* e /desabilitar-* para Pix, Boleto e TED; uso de Redis como flag store, validação na banking-api e restrição de execução a operadores autorizados.',
+        impacto:'Time desativa um meio de pagamento em segundos via Slack em caso de incidente, sem deploy nem intervenção manual no banco.'
+      },
+      { title:'Visualização do limite disponível para transações',
+        jiraKey:'PAY-2207',
+        contexto:'Com a validação de limite antes do pagamento já em produção, o usuário recebe feedback quando excede o limite — mas ainda não tem visibilidade de quanto pode pagar e por qual método.',
+        feito:'Visualização do limite disponível para transações dentro do AmigoPay, antes do início do fluxo de pagamento.',
+        impacto:'Usuário planeja a transação dentro do limite, eliminando tentativas falhas antes do OTP.'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202627', name:'Semana 27 · 29 Jun – 5 Jul', releaseDate:'2026-07-02', released:false,
+    desc:'PIX · Maquininha · Link de Pagamento · Orçamento · Atendimento',
+    features:[
+      { title:'MED 2.0 (Contestação de Pix)',
+        jiraKey:'PAY-1129',
+        contexto:'Resolução do Banco Central determina que, a partir de 01/10, aplicativos de participantes do Pix devem oferecer autoatendimento do Mecanismo Especial de Devolução (MED) — para abertura de contestação em casos de golpe ou falha operacional.',
+        feito:'Fluxo de contestação de Pix em autoatendimento dentro do AmigoPay: abertura, registro das informações e acompanhamento do andamento da contestação MED 2.0.',
+        impacto:'AmigoPay adequado à exigência regulatória do BACEN; usuário ganha autonomia para contestar Pix sem passar pelo suporte.'
+      },
+      { title:'Desbloqueio do usuário master',
+        jiraKey:'PAY-2043',
+        contexto:'Quando o usuário master esgota todas as tentativas do OTP, ele fica bloqueado sem caminho de recuperação dentro do produto.',
+        feito:'Fluxo de redirecionamento para autodesbloqueio após esgotar tentativas de OTP, com feedback visual claro na interface web.',
+        impacto:'Usuário master recupera acesso sem ticket de suporte; reduz fricção em um dos cenários mais críticos de bloqueio.'
+      },
+      { title:'Vincular Finanças avulsas da maquininha à atendimento/orçamento pela Gestão de Cobranças',
+        jiraKey:'PAY-1647',
+        contexto:'Pagamentos avulsos via maquininha (PIX, cartão de crédito, cartão de débito) ficam na Gestão de Cobrança com status "Pago" sem o botão de três pontos para vincular ao atendimento ou orçamento.',
+        feito:'Exibição do menu de três pontos com opção de vincular pagamento para finanças avulsas da maquininha; vinculação a atendimento e orçamento com registro no log de atividades.',
+        impacto:'Reconciliação de pagamentos avulsos da maquininha vira fluxo padrão na Gestão de Cobrança, sem fallback para registro manual.'
+      },
+      { title:'Validações para remoção do Link de Pagamento',
+        jiraKey:'PAY-2201',
+        contexto:'Bug identificou inconsistências críticas na remoção de orçamentos com finanças AmigoPay associadas: middleware valida permissão incorreta, lifecycle remove orçamento mesmo quando o CLINIC-BANK rejeita, e código PIX continua ativo após a remoção do link.',
+        feito:'Correção das três inconsistências: middleware passa a validar permissão correta; lifecycle não remove orçamento se o CLINIC-BANK rejeitar; inativação efetiva do código PIX ao remover o link.',
+        impacto:'Integridade financeira preservada entre AMIGO e CLINIC-BANK; eliminação de orçamentos órfãos com link ativo.'
+      },
+      { title:'Agendamento de pagamentos',
+        jiraKey:'PAY-2423',
+        contexto:'O AmigoPay não oferece agendamento programado de pagamentos — toda operação é executada no momento da solicitação, sem opção de agendar para uma data futura.',
+        feito:'Mecanismo de agendamento de pagamentos no AmigoPay.',
+        impacto:'Clínica programa pagamentos com antecedência, reduzindo operação manual em datas críticas.'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202625', name:'Semana 25 · 15 Jun – 21 Jun', releaseDate:'2026-06-18', released:false,
+    desc:'Link de Pagamento · Conta Bancária · Inadimplência',
+    features:[
+      { title:'Optar por repassar os juros para o paciente por link de pagamento',
+        jiraKey:'PAY-1975',
+        contexto:'Os links de pagamento usam configuração fixa (até 10x sem juros), só alterável via suporte com ajuste manual em banco — enquanto a maquininha já oferece flexibilidade por cobrança.',
+        feito:'Configuração padrão de link de pagamento dentro de "Configurações Amigo Pay" e personalização individual no momento da criação da cobrança, tanto na Gestão de Cobranças quanto no Modal de Atendimento/Orçamento.',
+        impacto:'Clínica negocia condições por cobrança sem depender de suporte; paridade de flexibilidade entre maquininha e link de pagamento.'
+      },
+      { title:'Movimentação da conta AmigoPay para clientes inadimplentes',
+        jiraKey:'PAY-2443',
+        contexto:'A operação financeira do AmigoPay precisa de mecanismo definido para conduzir movimentações em contas de clientes com inadimplência.',
+        feito:'Fluxo dedicado de movimentação da conta AmigoPay para clientes inadimplentes.',
+        impacto:'Operação financeira ganha tratamento padronizado para o cenário de inadimplência, reduzindo decisão ad-hoc.'
+      },
+      { title:'Adicionar informações obrigatórias no extrato da conta AmigoPay',
+        jiraKey:'PAY-1980',
+        contexto:'O extrato disponibilizado pelo sistema não contém informações essenciais (titular, CNPJ, agência, conta), obrigando clientes a abrir solicitação manual junto à Dock.',
+        feito:'Extrato disponível para download em PDF e XLS direto da página de extrato, com nome do titular, CNPJ, agência e conta.',
+        impacto:'Cliente baixa o extrato completo sem abrir ticket; redução de dependência do suporte e da Dock em solicitações recorrentes.'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202623', name:'Semana 23 · 1 Jun – 7 Jun', releaseDate:'2026-06-04', released:false,
+    desc:'Zoop · CNPJ Alfanumérico · Link de Pagamento · Webhook',
+    features:[
+      { title:'Integração Zoop — onboarding e go-live (6 atividades)',
+        jiraKey:'PAY-2350',
+        contexto:'A migração para a Zoop como processadora alternativa à Dock entra na fase de execução: a Amigo precisa estar onboarded como seller (KYC, plano de taxas, conta bancária tokenizada), o BANK-API integrado à payment-gateway-api com mTLS, o link de pagamento operando via autorização direta (PCI-DSS), os webhooks recebendo notificações em menos de 1s.',
+        feito:'PAY-2351 — Cadastro do seller na ZOOP: onboarding completo.\nPAY-2354 — Integração do BANK-API com a ZOOP.\nPAY-2355 — Link de pagamento: pagamento por cartão via autorização direta.\nPAY-2356 — Integração de webhooks com resposta em menos de 1s.\nPAY-2357 — Conciliação financeira: cruzamento Zoop x Dock via cron durante a migração.\nPAY-2396 — Migrações de banco para suportar a integração.',
+        impacto:'Plataforma de pagamento com Zoop pronta para rollout gradual clínica a clínica; reduz dependência de fornecedor único e melhora condições comerciais.'
+      },
+      { title:'Cancelamento da ordem de venda · API de Integração Bancária Externa',
+        jiraKey:'PAY-2450',
+        contexto:'A API de Integração Bancária Externa precisa expor cancelamento de transações para e-commerce, tanto em PIX quanto em cartão.',
+        feito:'Endpoint de cancelamento da ordem de venda na API externa: reembolso para PIX, cancelamento para cartão, retorno de status ao e-commerce.',
+        impacto:'Integradores externos passam a operar o ciclo completo da venda (criação + cancelamento) sem necessidade de operação manual.'
+      },
+      { title:'Implementação do CNPJ Alfanumérico',
+        jiraKey:'PAY-2199',
+        contexto:'A IN RFB no 2.229/2024 institui o CNPJ alfanumérico a partir de 01/07/2026 — letras maiúsculas (A-Z) nas 12 primeiras posições. Sem adequação, qualquer cadastro ou validação de CNPJ pós-julho/2026 falhará em todo o AmigoPay.',
+        feito:'Adequação transversal das APIs, validações e máscaras do AmigoPay para aceitar o formato alfanumérico coexistindo com o formato numérico legado; cálculo do DV ajustado.',
+        impacto:'AmigoPay opera em conformidade com a Receita Federal a partir de julho/2026, sem ruptura para CNPJs já existentes.'
+      },
+    ]
+  },
+
+  /* ────── RELEASES LANÇADAS ────── */
+
+  { year:2026, id:'w202621', name:'Semana 21 · 18 Mai – 24 Mai', releaseDate:'2026-05-19', released:true,
+    desc:'Boleto · Maquininha · Link de Pagamento · Limites',
+    features:[
+      { title:'Correções (3)',
+        feito:'PAY-2434 — Rota de limites validando se o usuário é root ao invés de se o usuário é master\nPAY-2193 — Validações prévias ao pagamento no link de pagamento\nPAY-2408 — Erro ao validar boleto devido à nome do recebedor muito grande [Urgente]'
+      },
+      { title:'Atividades técnicas (1)',
+        feito:'PAY-2419 — Relatório de Pixs gerados pela maquineta x Pixs Pagos (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202620', name:'Semana 20 · 11 Mai – 17 Mai', releaseDate:'2026-05-12', released:true,
+    desc:'Prontuário · PIX · Boleto · Atendimento · Conta Bancária',
+    features:[
+      { title:'Implementação da API Gateway/Proxy (payment-gateway-api) · Integração com a ZOOP',
+        jiraKey:'PAY-2353',
+        contexto:'A migração para a Zoop como processadora alternativa exige uma camada de proxy que isole certificados mTLS e credenciais sensíveis dos sistemas consumidores, sem expor PCI-DSS.',
+        feito:'API backend interna payment-gateway-api que carrega certificado mTLS e chave privada do AWS SSM, configura https.Agent com mTLS, monta headers de autenticação e redireciona para payments.zoop.ws.',
+        impacto:'Habilita rollout gradual da Zoop com isolamento de credenciais; desbloqueia trabalhos de Link de Pagamento e Webhooks sobre a nova processadora.'
+      },
+      { title:'Configuração de Credenciais e Ambientes (DEV/PROD) · Integração com a ZOOP',
+        jiraKey:'PAY-2352',
+        contexto:'A integração com a Zoop exige credenciais distintas por ambiente (sandbox/produção) com isolamento estrito — certificado mTLS, marketplace_id, seller_id, ZPK e x-api-key — sem expor secrets em código.',
+        feito:'Credenciais publicadas no AWS SSM Parameter Store com paths segregados por ambiente; policy IAM segregada (DEV não acessa PROD).',
+        impacto:'Base de integração com Zoop segura e auditável; desbloqueia API Gateway, Link de Pagamento e testes integrados.'
+      },
+      { title:'Adicionar indicador de pagamento Amigo Pay na Fila de Atendimento do profissional de saúde',
+        jiraKey:'PAY-2040',
+        contexto:'O reconhecimento do AmigoPay na clínica ficava restrito à recepção e ao financeiro — o profissional de saúde não tinha visibilidade de que o atendimento estava pago e conciliado pelo produto.',
+        feito:'Tag PAY com tooltip "Pago e conciliado via AmigoPay" exibida na fila de atendimento da Home do médico, condicionada a módulo AmigoPay ativo e todos os financeiros do atendimento sendo AmigoPay e pagos.',
+        impacto:'Médico identifica visualmente atendimentos pagos via AmigoPay, ampliando o reconhecimento do produto entre profissionais de saúde.'
+      },
+      { title:'Correções (8)',
+        feito:'PAY-2405 — Não está sendo possível pagar um boleto sem documento do recebedor [Urgente]\nPAY-1824 — Erro da dock ao cancelar boletos quando é necessário cancelar a chave pix\nPAY-2403 — Erro ao validar um Pix QR code [Urgente]\nPAY-1976 — No Prontuário no botão [Atestado, laudo, declaração e outros] sistema exibe seleção incorreta\nPAY-1973 — No Prontuário -> [Evolução] apresentando o ícone do [Chat] - Contexto One - Clinic\nPAY-2275 — Baixar repasse em massa – não consegue colocar a forma de pagamento [Alta]\nPAY-2171 — Link de pagamento não ficou expirado ao cancelar um atendimento\nPAY-2415 — Amigo Pay: falha ao realizar transferência para conta PJ Jurídica'
+      },
+      { title:'Atividades técnicas (1)',
+        feito:'PAY-2301 — Inclusão de informações adicionais no banco para transferências entre contas (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202619', name:'Semana 19 · 4 Mai – 10 Mai', releaseDate:'2026-05-08', released:true,
+    desc:'Boleto · Conta Bancária · Limites',
+    features:[
+      { title:'Implementação de Rastreabilidade com LogUtils em Erros de Emissão de Boletos',
+        jiraKey:'PAY-2280',
+        contexto:'Falhas críticas na geração de boletos eram registradas com mensagens genéricas, dificultando distinguir entre erro de infraestrutura, regra de negócio ou instabilidade da Dock.',
+        feito:'Substituição de catches genéricos por LogUtils.error nos pontos de integração com a API de Boletos da Dock; captura do response body completo, com contexto (Action, Error, Stack, companyId, splitId).',
+        impacto:'Diagnóstico de falhas em emissão de boletos passa a ser feito por log, sem necessidade de reproduzir em ambiente.'
+      },
+      { title:'Validação de limite antes do pagamento',
+        jiraKey:'PAY-866',
+        contexto:'Pagamentos pelo AmigoPay (Pix, boleto, TED) eram enviados à Dock sem validação prévia dos limites do usuário — quando ultrapassavam, o erro só aparecia depois do OTP.',
+        feito:'Validação de limites antes do envio à Dock e antes do OTP, contemplando limite por movimentação, diário (06h–19h59 / 20h–05h59) e mensal; aplicado a Pix, pagamentos e transferências; alert no modal impede avanço quando excede.',
+        impacto:'Usuário recebe feedback claro antes do OTP, evitando pagamentos abortados após fluxo completo de autenticação.'
+      },
+      { title:'Nova API do recálculo do Saldo · Melhorias',
+        jiraKey:'PAY-375',
+        contexto:'O cálculo de saldo das contas bancárias estava acoplado ao monolito, dificultando manutenção e evolução de uma informação crítica para o financeiro.',
+        feito:'Nova API dedicada bank-balance-api responsável pelo cálculo do saldo; comportamento preservado em todos os tipos de finança; recálculo automático dos últimos 15 dias quando a API ficar indisponível.',
+        impacto:'Saldo bancário deixa de ser ponto frágil do monolito; manutenção isolada e resiliência via recálculo.'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202618', name:'Semana 18 · 27 Abr – 3 Mai', releaseDate:'2026-04-28', released:true,
+    desc:'Boleto · Orçamento · Automação · Prontuário · PIX',
+    features:[
+      { title:'Alterar dialog de warning para danger ao cancelar boleto Pay no orçamento',
+        jiraKey:'PAY-2242',
+        contexto:'O cancelamento de boleto Pay no orçamento é uma ação irreversível, mas o dialog de confirmação aparecia em estado warning — desalinhado com a gravidade da operação.',
+        feito:'Alteração do estado do dialog de warning para danger no cancelamento de boleto Pay; labels mantidas.',
+        impacto:'Sinalização visual coerente com a irreversibilidade da ação, reduzindo cancelamentos acidentais.'
+      },
+      { title:'Melhorar nome do log de Aprovar pagamento',
+        jiraKey:'PAY-2244',
+        contexto:'O nome do log "Aprovar pagamento" gerava ambiguidade sobre o que de fato havia sido autorizado, especialmente em fluxos de baixa manual.',
+        feito:'Renomeação do log para "Autorizou o pagamento para baixa manual", refletindo com precisão a ação executada.',
+        impacto:'Auditoria de operações financeiras fica mais clara, reduzindo ruído em análises de log.'
+      },
+      { title:'Atualizar payment_code (barcode) quando efetuar o pagamento de boletos',
+        jiraKey:'PAY-2042',
+        contexto:'A consulta findBankSlip à Dock retorna, em alguns casos, um payment_code (código de barras) diferente do registrado em new_finances. Sem atualização, o pagamento podia ser feito com código desatualizado.',
+        feito:'Atualização automática do payment_code na new_finances quando o findBankSlip retorna código diferente, com log auditável (de/para) em todas as consultas.',
+        impacto:'Pagamentos de boleto passam a usar sempre o código atualizado conforme a fonte oficial (Núclea via Dock).'
+      },
+      { title:'Observabilidade e Saúde da API · API de Integração Bancária Externa',
+        jiraKey:'PAY-1954',
+        contexto:'Operar uma API externa em produção exige instrumentação para diagnóstico rápido de falhas e padronização de erros para o consumidor.',
+        feito:'Rota de health-check, mapeamento e padronização de erros, documentação técnica completa no README.',
+        impacto:'Equipe de operação tem visibilidade do estado da API; integradores externos recebem respostas previsíveis.'
+      },
+      { title:'Pagamento via Cartão · API de Integração Bancária Externa',
+        jiraKey:'PAY-1952',
+        contexto:'A API de Integração Bancária Externa precisava expor o fluxo completo de pagamento via cartão para sistemas integradores.',
+        feito:'Rotas para buscar parcelas disponíveis de uma compra e para processar pagamentos via cartão à vista e parcelado.',
+        impacto:'Sistemas externos podem cobrar via cartão diretamente, com fluxo de parcelamento exposto.'
+      },
+      { title:'Pagamento via Pix · API de Integração Bancária Externa',
+        jiraKey:'PAY-1951',
+        contexto:'A API de Integração Bancária Externa precisava expor o ciclo completo do pagamento Pix para integradores.',
+        feito:'Rotas de geração, consulta e cancelamento de QR Code Pix; webhook de confirmação; cronjob de atualização automática de status.',
+        impacto:'Integradores externos cobram via Pix com confirmação em tempo real, sem precisar implementar polling próprio.'
+      },
+      { title:'Segurança da API de Integração Bancária Externa',
+        jiraKey:'PAY-1950',
+        contexto:'A exposição de funcionalidades bancárias via API externa exigia camada de segurança robusta contra abusos e acessos não autorizados.',
+        feito:'Middlewares de rate limit por IP/token, validação e whitelist de IPs, autenticação JWT com geração, validação e expiração de tokens.',
+        impacto:'Superfície externa do AmigoPay protegida contra scraping, força bruta e acessos indevidos.'
+      },
+      { title:'Correções (1)',
+        feito:'PAY-2036 — Lançamentos recorrentes "Indeterminados", sem listar a caixa de pergunta ao realizar alterações'
+      },
+      { title:'Atividades técnicas (2)',
+        feito:'PAY-2258 — Fluxo de fechamento do novo orçamento para cobranças AmigoPay (Atividade)\nPAY-1833 — Automação - PAY-1792 Pacientes - Prontuário (Testing Task)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202617', name:'Semana 17 · 20 Abr – 26 Abr', releaseDate:'2026-04-23', released:true,
+    desc:'Autenticação',
+    features:[
+      { title:'Melhoria na API de OTP',
+        jiraKey:'PAY-2240',
+        contexto:'Feature flags da API de OTP (Amigo OTP) não funcionavam em ambiente local, dificultando testes dos serviços de SMS e WhatsApp durante o desenvolvimento.',
+        feito:'Mecanismo que permite simular ou habilitar feature flags de OTP localmente, aproximando o ambiente de desenvolvimento da produção.',
+        impacto:'Devs validam fluxos OTP sem depender de ambiente compartilhado, reduzindo ciclo de feedback.'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202616', name:'Semana 16 · 13 Abr – 19 Abr', releaseDate:'2026-04-14', released:true,
+    desc:'Gestão Financeira · Dock · Atendimento · Repasse · Conta Bancária',
+    features:[
+      { title:'Editar a unidade das finanças do contas a pagar recorrente/parcelado, no extrato',
+        jiraKey:'PAY-1933',
+        contexto:'Ao editar um lançamento de contas a pagar recorrente pelo extrato, o campo Unidade ficava bloqueado, impedindo correções na destinação contábil.',
+        feito:'Liberação da edição do campo Unidade em lançamentos recorrentes/parcelados acessados via extrato.',
+        impacto:'Equipe financeira ajusta unidade em lançamentos recorrentes sem precisar excluir e recriar a finança.'
+      },
+      { title:'Banco de Dados · API de Integração Bancária Externa',
+        jiraKey:'PAY-1953',
+        contexto:'A nova API de Integração Bancária Externa precisava de estrutura de banco dedicada para suportar QR Codes Pix e pagamentos de cartão expostos externamente.',
+        feito:'Criação de migrations, tabelas para QR Codes Pix e pagamentos de cartão, índices, constraints e scripts de rollback.',
+        impacto:'Base estrutural para a oferta de funcionalidades AmigoPay a sistemas integradores externos.'
+      },
+      { title:'Correções (2)',
+        feito:'PAY-2247 — Imprecisão de ponto flutuante em valores de repasse (PASS_THROUGH) causa rejeição na dock [Urgente]\nPAY-1766 — Ao vincular uma finança amigo pay no atendimento está com erro com a lógica dos botões [Alta]'
+      },
+      { title:'Atividades técnicas (1)',
+        feito:'PAY-2223 — Adicionar coluna "No documento" no PDF do contas a pagar e contas a receber (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202614', name:'Semana 14 · 30 Mar – 5 Abr', releaseDate:'2026-04-01', released:true,
+    desc:'PIX · TED · Gestão Financeira · Conta Bancária',
+    features:[
+      { title:'Modal de pagamento no Contas a Pagar fecha quando ocorre erro na validação de chave pix',
+        jiraKey:'PAY-2032',
+        contexto:'No módulo Contas a Pagar, um erro de validação de chave Pix fechava o modal de pagamento automaticamente, exigindo refazer todo o fluxo.',
+        feito:'Modal permanece aberto em caso de erro de validação Pix, exibindo mensagem clara e desabilitando apenas a finança com erro; quando há múltiplas finanças, as demais seguem o fluxo normalmente.',
+        impacto:'Operador corrige a chave Pix sem reiniciar o pagamento, reduzindo retrabalho em pagamentos em lote.'
+      },
+      { title:'Atividades técnicas (1)',
+        feito:'PAY-817 — Ajustes transferências TED/Pix - Atualização de status de pagamento (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202613', name:'Semana 13 · 23 Mar – 29 Mar', releaseDate:'2026-03-23', released:true,
+    desc:'Boleto · Orçamento · Cobrança · Conta Bancária · Permissões',
+    features:[
+      { title:'Autorização clínicas do suporte · One + Clinic',
+        jiraKey:'PAY-2024',
+        contexto:'Clínicas do suporte precisavam de autorização para acessar funcionalidades específicas do AmigoPay sem comprometer permissões de outros perfis.',
+        feito:'Mecanismo de autorização específico para clínicas do time de suporte, permitindo acesso controlado para operação e atendimento ao cliente.',
+        impacto:'Time de suporte ganha autonomia para operar diretamente em ambientes de clínicas sem depender de escalações.'
+      },
+      { title:'Plantões - agenda · One + Clinic',
+        jiraKey:'PAY-1806',
+        contexto:'A integração com o Amigo One exigia simplificar a agenda no contexto de plantões, ocultando seleções complexas que não se aplicam ao plantão.',
+        feito:'Capa de seleção de profissionais, fila de espera, sala cirúrgica, sessões e urgência; usuário One fica como default fixo; listagem de plantões habilitada.',
+        impacto:'Médico do One tem fluxo de agendamento adequado à realidade de plantão, sem ruído de funcionalidades não aplicáveis.'
+      },
+      { title:'Correções (2)',
+        feito:'PAY-2018 — Erro ao gerar boleto de cobrança no Amigo Pay\nPAY-2022 — Inconsistência no Relatório de Vendas para orçamentos sem editor financeiro'
+      },
+      { title:'Atividades técnicas (4)',
+        feito:'PAY-1504 — [TESTES UNITÁRIOS] - Clinic Bank Api (Testing Task)\nPAY-1790 — Permissões de acesso (Atividade)\nPAY-2013 — Liberação da API de saldo para mais clínicas (Atividade)\nPAY-2020 — Adicionar novos IDs na regra para skipar as companies is_personal (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202612', name:'Semana 12 · 16 Mar – 22 Mar', releaseDate:'2026-03-17', released:true,
+    desc:'Atendimento · Amigo One · Boleto · Orçamento · Agendamento',
+    features:[
+      { title:'Ajuste do botão de reabrir no atendimento',
+        jiraKey:'PAY-1874',
+        contexto:'O botão de reabrir atendimento aparecia mesmo quando o atendimento não estava finalizado, e usuários do One conseguiam reabrir atendimentos já recebidos — comportamento incorreto.',
+        feito:'Botão passa a ser exibido apenas em atendimentos finalizados; em ambientes One, bloqueio adicional impede reabertura de atendimentos com status recebido.',
+        impacto:'Operação ganha consistência; integridade financeira protegida contra reaberturas indevidas em atendimentos já liquidados.'
+      },
+      { title:'Listar Plantões médicos na HOME (Fila de atendimento) · One + Clinic',
+        jiraKey:'PAY-1860',
+        contexto:'A Home do médico (fila de atendimento) não exibia os plantões cadastrados no Amigo One, prejudicando visibilidade da agenda.',
+        feito:'Listagem dos plantões do Amigo One na fila de atendimento da Home, em modo somente-leitura conforme spec do Figma.',
+        impacto:'Médico tem visão consolidada de plantões e atendimentos na Home, sem precisar alternar entre sistemas.'
+      },
+      { title:'Correções (3)',
+        feito:'PAY-1873 — Ajustes Modal de agendamento integração one-clinic\nPAY-1892 — Retirar a fila de espera da home do médico para consultórios pessoais web [Alta]\nPAY-1994 — Geração de boleto ficando em processando no checkout do orçamento [Urgente]'
+      },
+      { title:'Atividades técnicas (1)',
+        feito:'PAY-1915 — Remover informação de procedimentos na home do médico (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202611', name:'Semana 11 · 9 Mar – 15 Mar', releaseDate:'2026-03-09', released:true,
+    desc:'Boleto · Amigo One · Orçamento · Atendimento',
+    features:[
+      { title:'Integração Amigo One no Modal de Atendimento · One + Clinic',
+        jiraKey:'PAY-1791',
+        contexto:'O Modal de Atendimento do Clinic Web era completo demais para atendimentos vindos do Amigo One (mobile), que exigem versão simplificada sem dependência do módulo financeiro.',
+        feito:'Tabs Procedimento e Financeiro ocultadas em contexto One; remoção de impressão e pulseira; toggle "Valor Recebido" na aba Agendamento para marcar atendimento como pago com valor manual; nova rota backend em medical-app-api para registrar o pagamento com rastreabilidade.',
+        impacto:'Médico no One marca atendimento como pago com fluxo enxuto; consistência de status entre Web e Mobile, sem regressão para fluxos tradicionais do Clinic.'
+      },
+      { title:'Erro ao adicionar pagamento no novo orçamento',
+        jiraKey:'PAY-1884',
+        contexto:'Cliente reportou erro genérico "Não foi possível registrar o pagamento" ao inserir cartão como forma de pagamento no novo orçamento, bloqueando o fechamento da venda.',
+        feito:'Correção do fluxo de adição de cartão no novo orçamento; tratamento adequado da resposta da maquineta.',
+        impacto:'Operadora consegue registrar pagamento por cartão no novo orçamento sem fallback para fluxos antigos.'
+      },
+      { title:'Correções (2)',
+        feito:'PAY-1849 — Não é possível editar uma anamnese criada no mobile que utilize de modelos de outras clínicas [Alta]\nPAY-1880 — Está sendo possível adicionar boleto pelo anexar arquivos mesmo com um boleto já adicionado [Alta]'
+      },
+      { title:'Atividades técnicas (1)',
+        feito:'PAY-1852 — Sinalizar que paciente é de uma company pessoal na sua criação (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202610', name:'Semana 10 · 2 Mar – 8 Mar', releaseDate:'2026-03-04', released:true,
+    desc:'Amigo One · Automação · Prontuário · Orçamento · Conta Bancária',
+    features:[
+      { title:'Pacientes - Prontuário · One + Clinic',
+        jiraKey:'PAY-1792',
+        contexto:'O prontuário em companies personal (consultórios individuais) precisava de versão enxuta, sem tabs e funcionalidades que não fazem sentido nesse contexto.',
+        feito:'Prontuário simplificado com tabs de prontuário e cadastro; evoluções restritas a anamnese, observações, evolução e fotos; impressos limitados a receituário, solicitação de exames, laudo e atestado; galeria de imagens disponível.',
+        impacto:'Profissional em consultório individual usa o prontuário sem distrações de funcionalidades de clínica.'
+      },
+      { title:'Correções (3)',
+        feito:'PAY-1733 — Erro exibição de saldo de conta AmigoPay no resumo financeiro\nPAY-1787 — Deverá remover o botão de excluir/desvincular quando o orçamento tem item utilizado\nPAY-1498 — Finanças provenientes do PAY não estão permitindo realizar a baixa no financeiro antigo'
+      },
+      { title:'Atividades técnicas (3)',
+        feito:'PAY-1801 — Configuração de impressão do AmigoOne (Refinement)\nPAY-1830 — Criação do usuário AmigoOne para testes de automação (Automation)\nPAY-1800 — Criação da config de agenda (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202609', name:'Semana 09 · 23 Fev – 1 Mar', releaseDate:'2026-02-25', released:true,
+    desc:'Boleto · Orçamento · Gestão Financeira · Dock · Atendimento',
+    features:[
+      { title:'Não é possível excluir finanças vinculadas a boletos já cancelados pela Dock',
+        jiraKey:'PAY-1802',
+        contexto:'Cliente reportou erro ao tentar excluir boletos vencidos na Gestão de Cobrança quando esses já haviam sido cancelados pela Dock.',
+        feito:'Exclusão passa a funcionar mesmo quando o boleto já foi cancelado externamente pela Dock; tratamento de estado consistente.',
+        impacto:'Operadora limpa cobranças vencidas/canceladas sem precisar abrir suporte; SUP-8487 endereçado.'
+      },
+      { title:'Botão de imprimir todos boletos indisponível ao gerar boleto pelo modal de orçamento',
+        jiraKey:'PAY-1804',
+        contexto:'Após gerar boletos pelo modal de orçamento, o botão "Imprimir todos os boletos" só aparecia depois de um reload manual da página.',
+        feito:'Atualização do estado da tela após geração: botão é habilitado imediatamente quando há boletos válidos vinculados, sem necessidade de F5.',
+        impacto:'Geração e impressão de boletos em lote vira fluxo contínuo, sem ação manual extra.'
+      },
+      { title:'Correções (2)',
+        feito:'PAY-1794 — Não deve ser possível enviar por WhatsApp quando o boleto não está gerado\nPAY-1795 — Não deve ser possível excluir finanças linkadas a um orçamento ou atendimento na gestão'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202608', name:'Semana 08 · 16 Fev – 22 Fev', releaseDate:'2026-02-19', released:true,
+    desc:'Boleto · Orçamento · Maquininha · Atendimento · Gestão Financeira',
+    features:[
+      { title:'Novo fluxo de boletos - Contas a receber',
+        jiraKey:'PAY-1483',
+        contexto:'A Gestão de Cobrança não contemplava todos os estados e informações necessárias para boletos (juros, multa, desconto, parcelamento), dificultando operação financeira e identificação visual das cobranças.',
+        feito:'Reestruturação dos fluxos: encargos (juros/multa/desconto) exibidos apenas após pagamento; oito estados de boleto representados visualmente (gerando, falha, gerado, pago, vencido, cancelando, falha ao cancelar, cancelado); seção de Parcelas com tabela detalhada e tag "X de Y" em listagem e detalhamento.',
+        impacto:'Operadora identifica rapidamente o estado de cada cobrança, com clareza sobre encargos e parcelas, reduzindo dúvidas operacionais.'
+      },
+      { title:'Correções (5)',
+        feito:'PAY-1770 — Está sendo possível gerar pagamento parcelado acima do configurado pela maquineta [Alta]\nPAY-1727 — Erro ao vincular transação Pay quando existe pagamento manual com mesmo NSU [Alta]\nPAY-1721 — Tela de aprovação e pagamento dos Master com problema com a nova nav-bar\nPAY-1744 — Orçamentos em aberto não fecham ao adicionar financeiro no novo checkout [Alta]\nPAY-1732 — Remover o último financeiro pay de um orçamento que tem item utilizado'
+      },
+      { title:'Atividades técnicas (1)',
+        feito:'PAY-1403 — Mecanismo de upload implementado de maneira inadequada - anexar boleto e arquivos (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202607', name:'Semana 07 · 9 Fev – 15 Fev', releaseDate:'2026-02-09', released:true,
+    desc:'Link de Pagamento · Orçamento · Atendimento · Cartão',
+    features:[
+      { title:'Correções (3)',
+        feito:'PAY-1757 — Erro ao desvincular links de pagamento no atendimento [Urgente]\nPAY-1753 — Agrupamento incorreto de lotes de cartão Pay gera lotes vazios na listagem de contas [Urgente]\nPAY-1777 — Erro ao vincular link de pagamento em orçamento com procedimentos convertidos deletados [Alta]'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202606', name:'Semana 06 · 2 Fev – 8 Fev', releaseDate:'2026-02-02', released:true,
+    desc:'Orçamento · Atendimento · Gestão Financeira · PIX · Link de Pagamento',
+    features:[
+      { title:'Desvincular Finanças no Orçamento - Link de Pagamento',
+        jiraKey:'PAY-1664',
+        contexto:'Quando um link de pagamento era criado a partir de um orçamento, não havia como desvinculá-lo sem afetar outros itens da cobrança.',
+        feito:'Fluxo de desvinculação de finanças do tipo Link de Pagamento no orçamento, mantendo integridade dos demais itens.',
+        impacto:'Operadora pode corrigir vinculações incorretas no orçamento sem precisar recriar a cobrança inteira.'
+      },
+      { title:'Desvincular Finanças no Orçamento - Cartão',
+        jiraKey:'PAY-1662',
+        contexto:'Pagamentos por cartão vinculados a orçamentos não tinham fluxo de desvinculação, dificultando correções e estornos parciais.',
+        feito:'Fluxo de desvinculação de finanças de cartão no orçamento, mantendo integridade dos demais itens.',
+        impacto:'Operadora pode corrigir vinculações de cartão no orçamento sem retrabalho na cobrança.'
+      },
+      { title:'Desvincular Finanças no Orçamento - Pix',
+        jiraKey:'PAY-1660',
+        contexto:'Pagamentos via Pix vinculados a orçamentos não permitiam desvinculação granular.',
+        feito:'Fluxo de desvinculação de finanças Pix no orçamento, mantendo integridade dos demais itens.',
+        impacto:'Correções pontuais em vinculações Pix sem necessidade de recriar o orçamento.'
+      },
+      { title:'Integração amigopay no checkout do atendimento',
+        jiraKey:'PAY-1439',
+        contexto:'O checkout do atendimento operava com fluxo de pagamento legacy, desalinhado da plataforma AmigoPay.',
+        feito:'Integração do AmigoPay no checkout do atendimento, unificando a esteira de pagamento com o restante da plataforma.',
+        impacto:'Fluxo de pagamento consistente entre atendimento e demais módulos; redução de débito técnico do checkout antigo.'
+      },
+      { title:'Acréscimo acima da soma dos procedimentos no valor total · Oral Unic',
+        jiraKey:'PAY-1418',
+        contexto:'O modal de orçamento herdava do modal antigo a restrição de não permitir acréscimo no valor total acima da soma dos procedimentos.',
+        feito:'Acréscimo no valor total agora é permitido acima da soma dos procedimentos/matmeds; valor adicional é redistribuído proporcionalmente entre os itens.',
+        impacto:'Clínica negocia valor total com paciente sem precisar alterar procedimento a procedimento.'
+      },
+      { title:'Correções (3)',
+        feito:'PAY-1655 — Divergência de saldo final no Caixa/Banco, filtrando por períodos diferentes\nPAY-1729 — Valor pendente do atendimento fica incorreto ao vincular múltiplos Pix Pay [Urgente]\nPAY-1658 — Remover o último financeiro de um orçamento que tem item utilizado (Pagamentos Manuais) [Urgente]'
+      },
+      { title:'Atividades técnicas (1)',
+        feito:'PAY-1630 — Atualizar editor financeiro ao vincular transações (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202605', name:'Semana 05 · 26 Jan – 1 Fev', releaseDate:'2026-01-28', released:true,
+    desc:'Configuração · Boleto · PIX · Link de Pagamento · Limites',
+    features:[
+      { title:'Criação de rate-limit para consulta de boletos e criação de link de pagamentos',
+        jiraKey:'PAY-1413',
+        contexto:'As rotas de consulta de boletos e criação de links de pagamento não tinham limite de uso, criando risco de scraping, automações não autorizadas e sobrecarga do backend.',
+        feito:'Middleware DailyRateLimitMiddleware baseado em Redis com contagem por empresa+usuário+ação+dia; limite de 70 requisições/dia em GET /bank-slip/barcode e POST /payment-link; retorno HTTP 429 ao exceder.',
+        impacto:'Proteção contra abuso de rotas críticas; estabilidade preservada nas integrações financeiras.'
+      },
+      { title:'Correções (3)',
+        feito:'PAY-1670 — Ajuste nas labels do dialog de conversão/desfazer conversão de crédito\nPAY-1638 — Configuração de Desconto - Ajustar parâmetro de desconto, boleto apresentando erro dependendo dos valores\nPAY-1397 — Ajuste na configuração de permissões amigo pay'
+      },
+      { title:'Atividades técnicas (3)',
+        feito:'PAY-1626 — Verificar criação de chave Pix aleatória (Automation)\nPAY-1628 — Normalização de Banco (Automation)\nPAY-1636 — Correção do Setup e Teardown PAY (Automation)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202604', name:'Semana 04 · 19 Jan – 25 Jan', releaseDate:'2026-01-19', released:true,
+    desc:'PIX · Configuração · Boleto · TED · Atendimento',
+    features:[
+      { title:'Webhook de Boleto seta paid_date errado',
+        jiraKey:'PAY-1552',
+        contexto:'O webhook de boletos de entrada marcava a finança como paga com a data de transação enviada pela Dock (data do pagamento do cliente), não a data de liquidação real.',
+        feito:'Ajuste para usar o campo date da tabela transactions (data de liquidação) ao marcar paid_date de finanças vindas do webhook.',
+        impacto:'Reconciliação financeira passa a refletir o fluxo real de caixa, com data correta de entrada do recurso.'
+      },
+      { title:'Correções (3)',
+        feito:'PAY-1645 — Ajuste do tamanho da label na gestão de cobrança e tag de vencido\nPAY-1666 — Erro ao vincular Pix quando a transação não retorna Chave Pix [Alta]\nPAY-1668 — Ícone incorreto exibido ao gerar QR Code para Pix manual no atendimento [Alta]'
+      },
+      { title:'Atividades técnicas (5)',
+        feito:'PAY-1547 — Código de erro para TED fora do horário comercial (Atividade)\nPAY-1629 — Setup Configuração PAY (Automation)\nPAY-1627 — Verificar remoção de chave Pix (Automation)\nPAY-1653 — Criação de Data-TestIDs no front do Amigo (Atividade)\nPAY-1632 — Ajuste sanitize value no clinic bank api (Atividade)'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202603', name:'Semana 03 · 12 Jan – 18 Jan', releaseDate:'2026-01-15', released:true,
+    desc:'Atendimento · Boleto · Cartão · Cobrança · Gestão Financeira',
+    features:[
+      { title:'Melhorias Gestão de cobrança - Geração de boleto por split',
+        jiraKey:'PAY-1488',
+        contexto:'A geração de boletos na Gestão de Cobrança não contemplava todas as regras financeiras (juros, multa, desconto, parcelamento via split) e estava desalinhada do fluxo já validado no Orçamento Oral Unic.',
+        feito:'Refatoração da geração: aplicação correta de juros/multa/desconto; parcelamento via split com boleto por parcela; exibição de quantidade de parcelas; ações de gerar, regenerar, cancelar e cancelar todos.',
+        impacto:'Cobrança padronizada entre Gestão e Oral Unic; operadora financeira ganha controle granular sobre o ciclo de vida dos boletos.'
+      },
+      { title:'Desvincular Finanças no Atendimento - Pix',
+        jiraKey:'PAY-1511',
+        contexto:'Pagamentos Pix vinculados ao atendimento não tinham fluxo de desvinculação, exigindo retrabalho para correções.',
+        feito:'Fluxo de desvinculação de finanças Pix no atendimento.',
+        impacto:'Operadora corrige vinculações Pix no atendimento de forma granular.'
+      },
+      { title:'Desvincular Finanças no Atendimento - Cartão',
+        jiraKey:'PAY-1510',
+        contexto:'Pagamentos com cartão no atendimento não permitiam desvinculação sem afetar o restante da cobrança.',
+        feito:'Fluxo de desvinculação de finanças de cartão no atendimento.',
+        impacto:'Correção granular de vinculações de cartão no atendimento.'
+      },
+      { title:'Tirar o input de dias após a data de vencimento na configuração de boleto',
+        jiraKey:'PAY-1566',
+        contexto:'A configuração de boletos exibia campo "dias após o vencimento" para juros/multa, mas a regra foi descontinuada — o campo virou ruído sem efeito prático.',
+        feito:'Remoção do input visual e descarte do parâmetro no backend; geração, validação e consulta de boletos passam a funcionar com regras de cálculo padrão aplicadas após o vencimento.',
+        impacto:'Configuração de boleto fica mais simples e alinhada às regras vigentes; menor risco de configurações inválidas.'
+      },
+      { title:'Correções (3)',
+        feito:'PAY-1649 — Formatação do nome do pagador no modal de vincular transações avulsas [Alta]\nPAY-1651 — Tipo do atendimento sendo enviado errado ao vincular transações avulsas [Alta]\nPAY-1565 — Data de previsão do recebimento do cartão diferente da gestão de cobrança e da gestão de contas [Alta]'
+      },
+    ]
+  },
+
+  { year:2026, id:'w202602', name:'Semana 02 · 5 Jan – 11 Jan', releaseDate:'2026-01-05', released:true,
+    desc:'Cobrança · Repasse · Gestão Financeira',
+    features:[
+      { title:'Pagamento de Repasse pelo pay - Executante',
+        jiraKey:'PAY-1533',
+        contexto:'Pagamentos de finanças geradas pelo repasse precisavam ser realizados pelo AmigoPay, começando pelo cenário majoritário: repasse para usuários da própria clínica.',
+        feito:'Edição de finança de repasse passa a pré-preencher chave Pix e dados bancários do destinatário; pagamento segue o fluxo padrão (solicitação, aprovação, OTP); suporta repasses de atendimento e orçamento.',
+        impacto:'Clínica paga repasses diretamente pelo AmigoPay sem precisar de transferência manual fora da plataforma.'
+      },
+      { title:'Pagar com AmigoPay finanças do tipo salário',
+        jiraKey:'PAY-1449',
+        contexto:'Finanças do tipo salário geradas no Portal 360 só podiam ser registradas como baixa manual — o pagamento real ao funcionário acontecia fora da plataforma, sem rastreabilidade da transação.',
+        feito:'Formulário de contabilidade do funcionário ganha campo de chave Pix (com validação por tipo); finança do tipo salário pode ser convertida para Pix ou TED; dados bancários do funcionário são pré-carregados ou cadastrados no fluxo de conversão.',
+        impacto:'Folha de pagamento pode ser executada via AmigoPay com transação real, encerrando uma das principais lacunas da operação financeira interna da clínica.'
+      },
+      { title:'Melhorias da Gestão de Cobrança - Redesign',
+        jiraKey:'PAY-1490',
+        contexto:'A Gestão de Cobrança apresentava listagem e fluxos defasados em relação ao padrão de design da plataforma, com lacunas como ausência de descrição do link de pagamento na listagem e impossibilidade de alterar vencimento de link expirado.',
+        feito:'Redesign da Gestão de Cobrança seguindo o Figma; descrição do link de pagamento passa a aparecer na listagem; vencimento de link expirado torna-se editável.',
+        impacto:'Operadora financeira tem visão mais clara das cobranças e flexibilidade para reaproveitar links expirados sem recriação.'
+      },
+    ]
+  },
+
 ];
 
 /* ── Amigo One Releases ── */
@@ -1321,22 +2176,66 @@ const RELEASES = [
 let currentIdx = null;
 /* ── Multi-product state ── */
 const PRODUCTS = {
-  one:    { label: 'Amigo One',    footer: 'Amigo Mobile · ONE',     releases: RELEASES },
-  clinic: { label: 'Amigo Clinic', footer: 'Amigo Clinic · CLINIC',  releases: RELEASES_CLINIC },
-  pay:    { label: 'Amigo Pay',    footer: 'Amigo Pay · PAY',        releases: RELEASES_PAY }
+  one:    { label: 'Amigo One',    footer: 'Amigo Mobile · ONE',  releases: RELEASES },
+  clinic: { label: 'Amigo Clinic', footer: null,                  releases: null },
+  pay:    { label: 'Amigo Pay',    footer: 'Amigo Pay · PAY',     releases: RELEASES_PAY }
 };
 let currentProduct = 'one';
+let currentClinicTeam = 'pipeline';
+
+function getActiveReleases() {
+  if (currentProduct === 'clinic') {
+    return CLINIC_TEAMS[currentClinicTeam].releases;
+  }
+  return PRODUCTS[currentProduct].releases;
+}
+
+function getActiveFooter() {
+  if (currentProduct === 'clinic') {
+    return CLINIC_TEAMS[currentClinicTeam].footer;
+  }
+  return PRODUCTS[currentProduct].footer;
+}
+
+function switchClinicTeam(team) {
+  currentClinicTeam = team;
+  ['pipeline','root','strategy','breakpoint'].forEach(t => {
+    document.getElementById('team-btn-' + t).classList.toggle('active', t === team);
+  });
+  document.getElementById('footerLabel').textContent = CLINIC_TEAMS[team].footer;
+  document.getElementById('searchInput').value = '';
+  const releases = CLINIC_TEAMS[team].releases;
+  filteredList = [...releases];
+  buildSidebar(filteredList);
+  const last = releases.find(r => r.released) || releases[0];
+  if (last) selectRelease(last.id);
+  else document.getElementById('mainContent').innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">🚧</div>
+      <div class="empty-title">Em mapeamento</div>
+      <div class="empty-sub">As releases deste time ainda estão sendo mapeadas no Jira.</div>
+    </div>`;
+}
 
 function switchProduct(key) {
   currentProduct = key;
-  // update buttons
+  // update product buttons
   ['one','clinic','pay'].forEach(k => {
     document.getElementById('btn-' + k).classList.toggle('active', k === key);
   });
+  // show/hide clinic team switcher
+  document.getElementById('clinicTeamSwitcher').classList.toggle('visible', key === 'clinic');
+  // clear search
+  document.getElementById('searchInput').value = '';
+
+  if (key === 'clinic') {
+    // delegate to team switcher
+    switchClinicTeam(currentClinicTeam);
+    return;
+  }
+
   // update footer
   document.getElementById('footerLabel').textContent = PRODUCTS[key].footer;
-  // clear search and rebuild
-  document.getElementById('searchInput').value = '';
   const releases = PRODUCTS[key].releases;
   filteredList = [...releases];
   buildSidebar(filteredList);
@@ -1431,7 +2330,7 @@ function selectRelease(id) {
     el.classList.toggle('active', el.dataset.id === id);
   });
 
-  const activeReleases = PRODUCTS[currentProduct].releases;
+  const activeReleases = getActiveReleases();
   const r = activeReleases.find(r => r.id === id);
   const allIds = activeReleases.map(r => r.id);
   const idx = allIds.indexOf(id);
@@ -1503,9 +2402,9 @@ function selectRelease(id) {
             const hasDetails = isObj && (f.contexto || f.feito || f.impacto);
             const actionLabel = r.released ? 'O que foi feito' : 'O que será feito';
             const chevronSvg = `<svg class="feat-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>`;
-            // Gera linha de imagens: usa imagens reais se fornecidas, senão placeholder
+            // Gera frame de imagem — retorna vazio se não houver src
             function buildImgFrame(src, label, isSingle) {
-              const width = isSingle ? '100%' : '';
+              if (!src) return '';
               return `<div class="feat-img-frame" style="${isSingle ? 'width:100%;' : ''}">
                 <div class="feat-frame-bar">
                   <div class="feat-frame-dot fd-red"></div>
@@ -1513,38 +2412,19 @@ function selectRelease(id) {
                   <div class="feat-frame-dot fd-green"></div>
                 </div>
                 <div class="feat-frame-label">${label}</div>
-                ${src ? `
-                  <img src="${src}" alt="${label}" style="width:100%;display:block;object-fit:contain;max-height:400px;cursor:zoom-in;"
-                    onclick="openLightbox('${src}','${label}')"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                  <div class="feat-frame-placeholder" style="display:none;">
-                    <div class="feat-placeholder-icon">🖼️</div>
-                    <div class="feat-placeholder-text">${label}<br><small style="opacity:.6">Arquivo não encontrado: ${src}</small></div>
-                  </div>` : `
-                  <div class="feat-frame-placeholder">
-                    <div class="feat-placeholder-icon">${r.released ? '✨' : '🎨'}</div>
-                    <div class="feat-placeholder-text">${label}</div>
-                  </div>`}
+                <img src="${src}" alt="${label}" style="width:100%;display:block;object-fit:contain;max-height:400px;cursor:zoom-in;"
+                  onclick="openLightbox('${src}','${label}')"
+                  onerror="this.closest('.feat-img-frame').style.display='none'">
               </div>`;
             }
 
-            let imgRowContent;
+            let imgRowContent = '';
             if (isObj && f.images && f.images.length > 0) {
-              if (f.images.length === 1 && f.images[0].single) {
-                // imagem única (comparação lado a lado embutida na própria imagem)
-                imgRowContent = `<div class="feat-img-row" style="grid-template-columns:1fr;">
-                  ${buildImgFrame(f.images[0].src, f.images[0].label, true)}
-                </div>`;
-              } else {
-                imgRowContent = `<div class="feat-img-row">
-                  ${f.images.map(img => buildImgFrame(img.src, img.label, false)).join('')}
-                </div>`;
+              const isSingle = f.images.length === 1 && f.images[0].single;
+              const frames = f.images.map(img => buildImgFrame(img.src, img.label, isSingle)).join('');
+              if (frames) {
+                imgRowContent = `<div class="feat-img-row" style="${isSingle ? 'grid-template-columns:1fr;' : ''}">${frames}</div>`;
               }
-            } else {
-              imgRowContent = `<div class="feat-img-row">
-                ${buildImgFrame(null, 'Antes', false)}
-                ${buildImgFrame(null, r.released ? 'Depois' : 'Prévia', false)}
-              </div>`;
             }
             const imgRow = imgRowContent;
             const bodyHtml = isObj ? `
@@ -1609,7 +2489,7 @@ function toggleFeat(id) {
 /* ── Filter ── */
 function filterReleases(q) {
   q = q.toLowerCase();
-  const releases = PRODUCTS[currentProduct].releases;
+  const releases = getActiveReleases();
   filteredList = q
     ? releases.filter(r => r.name.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q))
     : [...releases];
